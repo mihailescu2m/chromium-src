@@ -35,7 +35,7 @@ void DispatchToGpuPlatformSupportTask(IPC::Message* msg) {
 }
 
 void DispatchToGpuPlatformSupportTaskOnIO(
-    const scoped_refptr<base::SingleThreadTaskRunner>& gpu_task_runner,
+    const scoped_refptr<base::SingleThreadTaskRunner>& gpu_io_task_runner,
     IPC::Message* msg) {
   IPC::MessageFilter* filter = ui::OzonePlatform::GetInstance()
                                    ->GetGpuPlatformSupport()
@@ -45,8 +45,8 @@ void DispatchToGpuPlatformSupportTaskOnIO(
     return;
   }
 
-  gpu_task_runner->PostTask(FROM_HERE,
-                            base::Bind(DispatchToGpuPlatformSupportTask, msg));
+  gpu_io_task_runner->PostTask(
+      FROM_HERE, base::Bind(DispatchToGpuPlatformSupportTask, msg));
 }
 
 }  // namespace
@@ -102,7 +102,7 @@ class FakeGpuProcessHost {
 
   void InitOnIO() {
     base::Callback<void(IPC::Message*)> sender =
-        base::Bind(&DispatchToGpuPlatformSupportTaskOnIO, gpu_task_runner_);
+        base::Bind(&DispatchToGpuPlatformSupportTaskOnIO, gpu_io_task_runner_);
 
     ui::OzonePlatform::GetInstance()
         ->GetGpuPlatformSupportHost()
