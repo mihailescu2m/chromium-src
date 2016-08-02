@@ -219,6 +219,11 @@ bool GLContextEGL::MakeCurrent(GLSurface* surface) {
     return false;
   }
 
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+  if (!surface->IsOffscreen())
+    eglSwapInterval(display_, 0);
+#endif
+
   // Set this as soon as the context is current, since we might call into GL.
   BindGLApi();
 

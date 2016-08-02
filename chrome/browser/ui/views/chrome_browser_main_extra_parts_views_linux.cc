@@ -29,6 +29,9 @@
 #include "ui/views/widget/desktop_aura/x11_desktop_handler.h"
 #endif
 #include "ui/views/widget/native_widget_aura.h"
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+#include "ozone/ui/webui/ozone_webui.h"
+#endif
 
 namespace {
 
@@ -76,6 +79,10 @@ void ChromeBrowserMainExtraPartsViewsLinux::PreEarlyInitialization() {
   views::LinuxUI* gtk2_ui = BuildGtkUi();
   gtk2_ui->SetNativeThemeOverride(base::Bind(&GetNativeThemeForWindow));
   views::LinuxUI::SetInstance(gtk2_ui);
+#endif
+
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+  views::LinuxUI::SetInstance(BuildWebUI());
 #endif
 }
 
