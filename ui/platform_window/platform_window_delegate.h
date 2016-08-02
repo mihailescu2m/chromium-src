@@ -7,6 +7,8 @@
 
 #include "ui/gfx/native_widget_types.h"
 
+#include <vector>
+
 namespace gfx {
 class Rect;
 }
@@ -51,6 +53,22 @@ class PlatformWindowDelegate {
   virtual void OnAcceleratedWidgetDestroyed() = 0;
 
   virtual void OnActivationChanged(bool active) = 0;
+
+  virtual void OnDragEnter(unsigned windowhandle,
+                           float x,
+                           float y,
+                           const std::vector<std::string>& mime_types,
+                           uint32_t serial) { }
+
+  virtual void OnDragDataReceived(int fd) { }
+
+  virtual void OnDragLeave() { }
+
+  virtual void OnDragMotion(float x,
+                            float y,
+                            uint32_t time) { }
+
+  virtual void OnDragDrop() { }
 };
 
 }  // namespace ui
