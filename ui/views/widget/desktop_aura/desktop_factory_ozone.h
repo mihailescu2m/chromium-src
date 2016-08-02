@@ -27,8 +27,11 @@ class VIEWS_EXPORT DesktopFactoryOzone {
   // Returns the instance.
   static DesktopFactoryOzone* GetInstance();
 
+  // Disabled for external ozone wayland port
+#if !(defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL))
   // Sets the implementation delegate. Ownership is retained by the caller.
   static void SetInstance(DesktopFactoryOzone* impl);
+#endif
 
   // Delegates implementation of DesktopWindowTreeHost::Create externally to
   // Ozone implementation.
