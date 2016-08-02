@@ -1446,8 +1446,11 @@ bool View::HandleAccessibleAction(const ui::AXActionData& action_data) {
 }
 
 gfx::NativeViewAccessible View::GetNativeViewAccessible() {
+// Disabled for ozone-wayland port
+#if !defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
   if (!native_view_accessibility_)
     native_view_accessibility_ = NativeViewAccessibility::Create(this);
+#endif
   if (native_view_accessibility_)
     return native_view_accessibility_->GetNativeObject();
   return nullptr;
@@ -1460,8 +1463,11 @@ void View::NotifyAccessibilityEvent(
     ViewsDelegate::GetInstance()->NotifyAccessibilityEvent(this, event_type);
 
   if (send_native_event && GetWidget()) {
+// Disabled for ozone-wayland port
+#if !defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
     if (!native_view_accessibility_)
       native_view_accessibility_ = NativeViewAccessibility::Create(this);
+#endif
     if (native_view_accessibility_)
       native_view_accessibility_->NotifyAccessibilityEvent(event_type);
   }
