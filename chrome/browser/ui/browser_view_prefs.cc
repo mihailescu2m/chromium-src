@@ -10,8 +10,12 @@
 #include "components/prefs/pref_registry_simple.h"
 #include "components/prefs/pref_service.h"
 
-#if defined(OS_LINUX) && !defined(OS_CHROMEOS)
+#if defined(OS_LINUX) && !defined(OS_CHROMEOS) && defined(USE_X11)
 #include "ui/base/x/x11_util.h"  // nogncheck
+#endif
+
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+#include "ozone/ui/desktop_aura/ozone_util.h"
 #endif
 
 namespace {

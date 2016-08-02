@@ -423,6 +423,7 @@ split_static_library("browser") {
     "fullscreen.h",
     "fullscreen_chromeos.cc",
     "fullscreen_mac.mm",
+    "fullscreen_ozone.cc",
     "fullscreen_win.cc",
     "gcm/gcm_product_util.cc",
     "gcm/gcm_product_util.h",
@@ -3858,8 +3859,6 @@ split_static_library("browser") {
       "first_run/upgrade_util_linux.cc",
       "first_run/upgrade_util_linux.h",
       "icon_loader_auralinux.cc",
-      "password_manager/native_backend_kwallet_x.cc",
-      "password_manager/native_backend_kwallet_x.h",
       "platform_util_linux.cc",
       "shell_integration_linux.cc",
       "shell_integration_linux.h",
@@ -4113,6 +4112,11 @@ split_static_library("browser") {
     sources += [
       "chrome_browser_main_extra_parts_exo.cc",
       "chrome_browser_main_extra_parts_exo.h",
+    ]
+  }
+  if (ozone_platform_wayland_external) {
+    sources -= [
+      "fullscreen_ozone.cc",
     ]
   }
 }

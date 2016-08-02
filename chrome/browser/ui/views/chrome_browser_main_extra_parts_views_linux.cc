@@ -25,11 +25,14 @@
 #include "ui/native_theme/native_theme_dark_aura.h"
 #include "ui/views/linux_ui/linux_ui.h"
 #include "ui/views/widget/desktop_aura/desktop_screen.h"
+#if defined(USE_X11)
 #include "ui/views/widget/desktop_aura/x11_desktop_handler.h"
+#endif
 #include "ui/views/widget/native_widget_aura.h"
 
 namespace {
 
+#if !defined(USE_OZONE)
 ui::NativeTheme* GetNativeThemeForWindow(aura::Window* window) {
   if (!window)
     return nullptr;
@@ -54,6 +57,7 @@ ui::NativeTheme* GetNativeThemeForWindow(aura::Window* window) {
 
   return ui::NativeTheme::GetInstanceForNativeUi();
 }
+#endif
 
 }  // namespace
 
@@ -67,10 +71,12 @@ ChromeBrowserMainExtraPartsViewsLinux::
 }
 
 void ChromeBrowserMainExtraPartsViewsLinux::PreEarlyInitialization() {
+#if !defined(USE_OZONE)
   // TODO(erg): Refactor this into a dlopen call when we add a GTK3 port.
   views::LinuxUI* gtk2_ui = BuildGtkUi();
   gtk2_ui->SetNativeThemeOverride(base::Bind(&GetNativeThemeForWindow));
   views::LinuxUI::SetInstance(gtk2_ui);
+#endif
 }
 
 void ChromeBrowserMainExtraPartsViewsLinux::ToolkitInitialized() {
@@ -83,7 +89,9 @@ void ChromeBrowserMainExtraPartsViewsLinux::PreCreateThreads() {
   // because its display::Screen instance depends on it.
   views::LinuxUI::instance()->UpdateDeviceScaleFactor();
   ChromeBrowserMainExtraPartsViews::PreCreateThreads();
+#if defined(USE_X11)
   views::X11DesktopHandler::get()->AddObserver(this);
+#endif
 }
 
 void ChromeBrowserMainExtraPartsViewsLinux::OnWorkspaceChanged(
