@@ -38,4 +38,9 @@ source_set("common") {
   ]
 
   visibility = [ "//ui/ozone/platform/*" ]
+
+  # Added for ozone wayland external port
+  if (ozone_platform_wayland_external) {
+    visibility += [ "//ozone:ozone_wayland", ]
+  }
 }

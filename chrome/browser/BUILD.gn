@@ -2945,8 +2945,6 @@ split_static_library("browser") {
       "first_run/upgrade_util_linux.cc",
       "first_run/upgrade_util_linux.h",
       "icon_loader_auralinux.cc",
-      "password_manager/native_backend_kwallet_x.cc",
-      "password_manager/native_backend_kwallet_x.h",
       "platform_util_linux.cc",
       "shell_integration_linux.cc",
       "shell_integration_linux.h",
@@ -4099,6 +4097,12 @@ split_static_library("browser") {
     if (is_chromeos) {
       deps += [ "//ash/public/cpp" ]
     }
+  }
+  # Added for ozone-wayland port
+  if (use_ozone && ozone_platform_wayland_external) {
+    sources -= [
+      "fullscreen_ozone.cc",
+    ]
   }
 }
 

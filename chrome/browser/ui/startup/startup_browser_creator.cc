@@ -79,8 +79,8 @@
 #include "chromeos/cryptohome/cryptohome_parameters.h"
 #include "components/user_manager/user_manager.h"
 #endif
-
-#if defined(TOOLKIT_VIEWS) && defined(OS_LINUX)
+// Added defined(USE_X11) for compiling chrome browser with ozone-wayland port
+#if defined(TOOLKIT_VIEWS) && defined(OS_LINUX) && defined(USE_X11)
 #include "ui/events/devices/x11/touch_factory_x11.h"  // nogncheck
 #endif
 

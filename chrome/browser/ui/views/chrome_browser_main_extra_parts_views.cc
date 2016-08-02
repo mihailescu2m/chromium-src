@@ -90,7 +90,8 @@ void ChromeBrowserMainExtraPartsViews::ToolkitInitialized() {
 }
 
 void ChromeBrowserMainExtraPartsViews::PreCreateThreads() {
-#if defined(USE_AURA) && !defined(OS_CHROMEOS) && !defined(USE_OZONE)
+  // Removed !defined(USE_OZONE) for ozone wayland external port
+#if defined(USE_AURA) && !defined(OS_CHROMEOS)
   // The screen may have already been set in test initialization.
   if (!display::Screen::GetScreen())
     display::Screen::SetScreenInstance(views::CreateDesktopScreen());

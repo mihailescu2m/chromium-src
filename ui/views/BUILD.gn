@@ -537,6 +537,9 @@ component("views") {
 
   if (use_ozone) {
     deps += [ "//ui/ozone" ]
+    if (ozone_platform_wayland_external) {
+      deps += [ "//ozone/ui/desktop_aura:views_ozone_wayland" ]
+    }
   }
   if (use_x11) {
     configs += [

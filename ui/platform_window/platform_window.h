@@ -10,6 +10,11 @@
 #include "base/strings/string16.h"
 #include "ui/base/cursor/cursor.h"
 
+// Added for external ozone wayland port
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+#include "ui/platform_window/wayland_external/wayland_platform_window.h"
+#endif
+
 namespace gfx {
 class Rect;
 }
@@ -22,7 +27,13 @@ class PlatformImeController;
 //
 // Each instance of PlatformWindow represents a single window in the
 // underlying platform windowing system (i.e. X11/Win/OSX).
+
+// Added for external ozone wayland port
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+class PlatformWindow : public WaylandPlatformWindow {
+#else
 class PlatformWindow {
+#endif
  public:
   virtual ~PlatformWindow() {}
 
