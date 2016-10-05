@@ -8,7 +8,7 @@
 #include "ui/views/views_export.h"
 #include "ui/views/widget/desktop_aura/desktop_factory_ozone.h"
 
-namespace gfx {
+namespace display {
 class Screen;
 }
 
@@ -30,7 +30,7 @@ class VIEWS_EXPORT DesktopFactoryOzoneWayland : public DesktopFactoryOzone {
 
   // Delegates implementation of DesktopScreen externally to
   // Ozone implementation.
-  gfx::Screen* CreateDesktopScreen() override;
+  display::Screen* CreateDesktopScreen() override;
 };
 
 DesktopFactoryOzone* CreateDesktopFactoryOzoneWayland();

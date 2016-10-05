@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "base/memory/ref_counted.h"
-#include "base/memory/scoped_ptr.h"
 #include "base/memory/weak_ptr.h"
 #include "ui/aura/window_observer.h"
 #include "ui/base/dragdrop/os_exchange_data.h"
@@ -119,7 +118,6 @@ class VIEWS_EXPORT DesktopDragDropClientWayland
     ui::OSExchangeData os_exchange_data_;
     std::list<std::string> unprocessed_mime_types_;
     std::string first_received_mime_type_;
-    int windowhandle_;
     int pipefd_ = 0;
   };
 
@@ -130,9 +128,9 @@ class VIEWS_EXPORT DesktopDragDropClientWayland
  private:
   // Returns a DropTargetEvent to be passed to the DragDropDelegate, or null to
   // abort the drag, using the location of point_ if no root location is passed.
-  scoped_ptr<ui::DropTargetEvent> CreateDropTargetEvent(
+  std::unique_ptr<ui::DropTargetEvent> CreateDropTargetEvent(
       const gfx::Point& point) const;
-  scoped_ptr<ui::DropTargetEvent> CreateDropTargetEvent() const;
+  std::unique_ptr<ui::DropTargetEvent> CreateDropTargetEvent() const;
 
   void DragDropSessionCompleted();
 
@@ -177,7 +175,7 @@ class VIEWS_EXPORT DesktopDragDropClientWayland
   bool did_most_recently_accept_drag_ = false;
 
   // Null except when a drop has occured but drag data is still being read.
-  scoped_ptr<gfx::Point> delayed_drop_location_;
+  std::unique_ptr<gfx::Point> delayed_drop_location_;
 
   base::WeakPtrFactory<DesktopDragDropClientWayland> weak_ptr_factory_;
 

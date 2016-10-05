@@ -128,7 +128,7 @@ class WindowManagerWayland
   void OnDispatcherListChanged() override;
 
   // Dispatch event via PlatformEventSource.
-  void DispatchUiEventTask(scoped_ptr<Event> event);
+  void DispatchUiEventTask(std::unique_ptr<Event> event);
   // Post a task to dispatch an event.
   void PostUiEvent(Event* event);
 

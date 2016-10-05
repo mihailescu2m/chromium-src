@@ -91,8 +91,10 @@ WaylandDisplay::WaylandDisplay() : SurfaceFactoryOzone(),
     primary_screen_(NULL),
     primary_seat_(NULL),
     display_poll_thread_(NULL),
+#if defined(ENABLE_DRM_SUPPORT)
     device_(NULL),
     m_deviceName(NULL),
+#endif
     sender_(NULL),
     loop_(NULL),
     screen_list_(),
@@ -100,9 +102,11 @@ WaylandDisplay::WaylandDisplay() : SurfaceFactoryOzone(),
     widget_map_(),
     serial_(0),
     processing_events_(false),
+#if defined(ENABLE_DRM_SUPPORT)
     m_authenticated_(false),
     m_fd_(-1),
     m_capabilities_(0),
+#endif
     weak_ptr_factory_(this) {
 }
 
@@ -136,12 +140,12 @@ void WaylandDisplay::DestroyWindow(unsigned w) {
     StopProcessingEvents();
 }
 
-gfx::AcceleratedWidget WaylandDisplay::GetNativeWindow(unsigned window_handle) {
+intptr_t WaylandDisplay::GetNativeWindow(unsigned window_handle) {
   WaylandWindow* widget = GetWidget(window_handle);
   DCHECK(widget);
   widget->RealizeAcceleratedWidget();
 
-  return (gfx::AcceleratedWidget)widget->egl_window();
+  return reinterpret_cast<intptr_t>(widget->egl_window());
 }
 
 bool WaylandDisplay::InitializeHardware() {
@@ -161,9 +165,9 @@ intptr_t WaylandDisplay::GetNativeDisplay() {
   return (intptr_t)display_;
 }
 
-scoped_ptr<ui::SurfaceOzoneEGL> WaylandDisplay::CreateEGLSurfaceForWidget(
+std::unique_ptr<ui::SurfaceOzoneEGL> WaylandDisplay::CreateEGLSurfaceForWidget(
     gfx::AcceleratedWidget w) {
-  return make_scoped_ptr<ui::SurfaceOzoneEGL>(new SurfaceOzoneWayland(w));
+  return std::unique_ptr<ui::SurfaceOzoneEGL>(new SurfaceOzoneWayland(w));
 }
 
 bool WaylandDisplay::LoadEGLGLES2Bindings(
@@ -230,7 +234,7 @@ scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
 #endif
 }
 
-scoped_ptr<ui::SurfaceOzoneCanvas> WaylandDisplay::CreateCanvasForWidget(
+std::unique_ptr<ui::SurfaceOzoneCanvas> WaylandDisplay::CreateCanvasForWidget(
     gfx::AcceleratedWidget widget) {
   LOG(FATAL) << "The browser process has attempted to start the GPU process in "
              << "software rendering mode. Software rendering is not supported "
@@ -245,7 +249,7 @@ scoped_ptr<ui::SurfaceOzoneCanvas> WaylandDisplay::CreateCanvasForWidget(
              << "-e gdb --eval-command=run --args''";
 
   // This code will obviously never be reached, but it placates -Wreturn-type.
-  return scoped_ptr<ui::SurfaceOzoneCanvas>();
+  return std::unique_ptr<ui::SurfaceOzoneCanvas>();
 }
 
 void WaylandDisplay::InitializeDisplay() {

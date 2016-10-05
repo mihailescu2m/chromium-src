@@ -34,6 +34,10 @@ void OzoneWebUI::Initialize() {
       platform->GetGpuPlatformSupportHost());
 }
 
+void OzoneWebUI::MaterialDesignControllerReady() {
+  NOTIMPLEMENTED();
+}
+
 ui::SelectFileDialog* OzoneWebUI::CreateSelectFileDialog(
     ui::SelectFileDialog::Listener* listener,
     ui::SelectFilePolicy* policy) const {
@@ -44,10 +48,10 @@ ui::SelectFileDialog* OzoneWebUI::CreateSelectFileDialog(
   return nullptr;
 }
 
-scoped_ptr<ui::LinuxInputMethodContext> OzoneWebUI::CreateInputMethodContext(
+std::unique_ptr<ui::LinuxInputMethodContext> OzoneWebUI::CreateInputMethodContext(
       ui::LinuxInputMethodContextDelegate* delegate, bool is_simple) const {
   DCHECK(host_);
-  return scoped_ptr<ui::LinuxInputMethodContext>(
+  return std::unique_ptr<ui::LinuxInputMethodContext>(
            new ui::InputMethodContextImplWayland(delegate, host_));
 }
 
@@ -60,6 +64,7 @@ void OzoneWebUI::GetDefaultFontDescription(
     std::string* family_out,
     int* size_pixels_out,
     int* style_out,
+    gfx::Font::Weight* weight_out,
     gfx::FontRenderParams* params_out) const {
   NOTIMPLEMENTED();
 }
@@ -134,10 +139,10 @@ bool OzoneWebUI::IsStatusIconSupported() const {
   return false;
 }
 
-scoped_ptr<StatusIconLinux> OzoneWebUI::CreateLinuxStatusIcon(
+std::unique_ptr<StatusIconLinux> OzoneWebUI::CreateLinuxStatusIcon(
   const gfx::ImageSkia& image,
   const base::string16& tool_tip) const {
-  return scoped_ptr<views::StatusIconLinux>();
+  return std::unique_ptr<views::StatusIconLinux>();
 }
 
 gfx::Image OzoneWebUI::GetIconForContentType(
@@ -145,9 +150,9 @@ gfx::Image OzoneWebUI::GetIconForContentType(
   return gfx::Image();
 }
 
-scoped_ptr<Border> OzoneWebUI::CreateNativeBorder(
+std::unique_ptr<Border> OzoneWebUI::CreateNativeBorder(
   views::LabelButton* owning_button,
-  scoped_ptr<views::LabelButtonBorder> border) {
+  std::unique_ptr<views::LabelButtonBorder> border) {
   return std::move(border);
 }
 

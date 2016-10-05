@@ -63,8 +63,8 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   void Init(aura::Window* content_window,
             const views::Widget::InitParams& params) override;
   void OnNativeWidgetCreated(const views::Widget::InitParams& params) override;
-  scoped_ptr<corewm::Tooltip> CreateTooltip() override;
-  scoped_ptr<aura::client::DragDropClient> CreateDragDropClient(
+  std::unique_ptr<corewm::Tooltip> CreateTooltip() override;
+  std::unique_ptr<aura::client::DragDropClient> CreateDragDropClient(
       DesktopNativeCursorManager* cursor_manager) override;
   void Close() override;
   void CloseNow() override;
@@ -81,6 +81,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   gfx::Rect GetWindowBoundsInScreen() const override;
   gfx::Rect GetClientAreaBoundsInScreen() const override;
   gfx::Rect GetRestoredBounds() const override;
+  std::string GetWorkspace() const override;
   gfx::Rect GetWorkAreaBoundsInScreen() const override;
   void SetShape(SkRegion* native_region) override;
   void Activate() override;
@@ -108,7 +109,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   void FrameTypeChanged() override;
   void SetFullscreen(bool fullscreen) override;
   bool IsFullscreen() const override;
-  void SetOpacity(unsigned char opacity) override;
+  void SetOpacity(float opacity) override;
   void SetWindowIcons(const gfx::ImageSkia& window_icon,
                       const gfx::ImageSkia& app_icon) override;
   void InitModalType(ui::ModalType modal_type) override;
@@ -205,7 +206,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   std::set<DesktopWindowTreeHostOzone*> window_children_;
 
   // Platform-specific part of this DesktopWindowTreeHost.
-  scoped_ptr<ui::PlatformWindow> platform_window_;
+  std::unique_ptr<ui::PlatformWindow> platform_window_;
   base::WeakPtrFactory<DesktopWindowTreeHostOzone> close_widget_factory_;
 
   // A list of all (top-level) windows that have been created but not yet
