@@ -39,7 +39,7 @@ class VaapiPictureWayland : public VaapiPicture {
 
   const scoped_refptr<VaapiWrapper>&  va_wrapper_;
 
-  scoped_ptr<VAImage> va_image_;
+  std::unique_ptr<VAImage> va_image_;
   // EGLImage bound to the GL textures used by the VDA client.
   scoped_refptr<gl::GLImageEGL> gl_image_;
 

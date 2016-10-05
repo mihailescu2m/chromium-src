@@ -86,7 +86,6 @@ class OzoneWaylandWindow : public PlatformWindow,
   ui::WidgetType type_;
   ui::WidgetState state_;
   SkRegion* region_;
-  int cursor_type_;
   base::string16 title_;
   // The current cursor bitmap (immutable).
   scoped_refptr<BitmapCursorOzone> bitmap_;
