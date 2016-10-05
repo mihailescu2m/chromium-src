@@ -7,12 +7,12 @@
 
 #include <string>
 #include "base/memory/ref_counted.h"
+#include "ozone/platform/channel_observer.h"
 #include "ozone/platform/window_constants.h"
 #include "third_party/skia/include/core/SkRegion.h"
 #include "ui/events/platform/platform_event_dispatcher.h"
 #include "ui/gfx/geometry/rect.h"
 #include "ui/gfx/native_widget_types.h"
-#include "ui/ozone/platform/drm/host/channel_observer.h"
 #include "ui/platform_window/platform_window.h"
 
 namespace ui {
