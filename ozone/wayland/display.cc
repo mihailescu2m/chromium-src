@@ -22,7 +22,9 @@
 #include "base/stl_util.h"
 #include "ipc/ipc_sender.h"
 #include "ozone/platform/messages.h"
+#if defined(USE_DATA_DEVICE_MANAGER)
 #include "ozone/wayland/data_device.h"
+#endif
 #include "ozone/wayland/display_poll_thread.h"
 #include "ozone/wayland/egl/surface_ozone_wayland.h"
 #if defined(ENABLE_DRM_SUPPORT)
@@ -334,8 +336,10 @@ void WaylandDisplay::Terminate() {
   if (text_input_manager_)
     wl_text_input_manager_destroy(text_input_manager_);
 
+#if defined(USE_DATA_DEVICE_MANAGER)
   if (data_device_manager_)
     wl_data_device_manager_destroy(data_device_manager_);
+#endif
 
 #if defined(ENABLE_DRM_SUPPORT)
   if (m_deviceName)
@@ -532,20 +536,28 @@ void WaylandDisplay::HideInputPanel() {
 }
 
 void WaylandDisplay::RequestDragData(const std::string& mime_type) {
+#if defined(USE_DATA_DEVICE_MANAGER)
   primary_seat_->GetDataDevice()->RequestDragData(mime_type);
+#endif
 }
 
 void WaylandDisplay::RequestSelectionData(const std::string& mime_type) {
+#if defined(USE_DATA_DEVICE_MANAGER)
   primary_seat_->GetDataDevice()->RequestSelectionData(mime_type);
+#endif
 }
 
 void WaylandDisplay::DragWillBeAccepted(uint32_t serial,
                                         const std::string& mime_type) {
+#if defined(USE_DATA_DEVICE_MANAGER)
   primary_seat_->GetDataDevice()->DragWillBeAccepted(serial, mime_type);
+#endif
 }
 
 void WaylandDisplay::DragWillBeRejected(uint32_t serial) {
+#if defined(USE_DATA_DEVICE_MANAGER)
   primary_seat_->GetDataDevice()->DragWillBeRejected(serial);
+#endif
 }
 
 #if defined(ENABLE_DRM_SUPPORT)
@@ -605,9 +617,11 @@ void WaylandDisplay::DisplayHandleGlobal(void *data,
   if (strcmp(interface, "wl_compositor") == 0) {
     disp->compositor_ = static_cast<wl_compositor*>(
         wl_registry_bind(registry, name, &wl_compositor_interface, 1));
+#if defined(USE_DATA_DEVICE_MANAGER)
   } else if (strcmp(interface, "wl_data_device_manager") == 0) {
     disp->data_device_manager_ = static_cast<wl_data_device_manager*>(
         wl_registry_bind(registry, name, &wl_data_device_manager_interface, 1));
+#endif
 #if defined(ENABLE_DRM_SUPPORT)
   } else if (!strcmp(interface, "wl_drm")) {
     m_drm = static_cast<struct wl_drm*>(wl_registry_bind(registry,
@@ -628,7 +642,9 @@ void WaylandDisplay::DisplayHandleGlobal(void *data,
     // TODO(mcatanzaro): The display passed to WaylandInputDevice must have a
     // valid data device manager. We should ideally be robust to the compositor
     // advertising a wl_seat first. No known compositor does this, fortunately.
+#if defined(USE_DATA_DEVICE_MANAGER)
     CHECK(disp->data_device_manager_);
+#endif
     WaylandSeat* seat = new WaylandSeat(disp, name);
     disp->seat_list_.push_back(seat);
     disp->primary_seat_ = disp->seat_list_.front();
