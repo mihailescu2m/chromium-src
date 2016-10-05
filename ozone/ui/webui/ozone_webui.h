@@ -13,7 +13,7 @@
 #include "base/observer_list.h"
 #include "ozone/platform/ozone_export_wayland.h"
 #include "ui/base/ime/linux/linux_input_method_context.h"
-#include "ui/events/linux/text_edit_key_bindings_delegate_auralinux.h"
+#include "ui/base/ime/linux/text_edit_key_bindings_delegate_auralinux.h"
 #include "ui/gfx/color_utils.h"
 #include "ui/gfx/font_render_params.h"
 #include "ui/gfx/geometry/insets.h"
@@ -50,7 +50,7 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
   ~OzoneWebUI() override;
 
   // ui::LinuxInputMethodContextFactory:
-  scoped_ptr<ui::LinuxInputMethodContext> CreateInputMethodContext(
+  std::unique_ptr<ui::LinuxInputMethodContext> CreateInputMethodContext(
       ui::LinuxInputMethodContextDelegate* delegate, bool is_simple)
       const override;
 
@@ -66,10 +66,12 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
       std::string* family_out,
       int* size_pixels_out,
       int* style_out,
+      gfx::Font::Weight* weight_out,
       gfx::FontRenderParams* params_out) const override;
 
   // ui::LinuxUI:
   void Initialize() override;
+  void MaterialDesignControllerReady() override;
 
   // These methods are not needed
   gfx::Image GetThemeImageNamed(int id) const override;
@@ -90,14 +92,14 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
   void SetDownloadCount(int count) const override;
   void SetProgressFraction(float percentage) const override;
   bool IsStatusIconSupported() const override;
-  scoped_ptr<StatusIconLinux> CreateLinuxStatusIcon(
+  std::unique_ptr<StatusIconLinux> CreateLinuxStatusIcon(
       const gfx::ImageSkia& image,
       const base::string16& tool_tip) const override;
   gfx::Image GetIconForContentType(const std::string& content_type,
                                    int size) const override;
-  scoped_ptr<Border> CreateNativeBorder(
+  std::unique_ptr<Border> CreateNativeBorder(
       views::LabelButton* owning_button,
-      scoped_ptr<views::LabelButtonBorder> border) override;
+      std::unique_ptr<views::LabelButtonBorder> border) override;
   void AddWindowButtonOrderObserver(
       WindowButtonOrderObserver* observer) override;
   void RemoveWindowButtonOrderObserver(
