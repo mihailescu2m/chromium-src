@@ -4,9 +4,6 @@
 # found in the LICENSE file.
 
 {
-   'includes': [
-       'ui/ui.gypi',
-    ],
   'targets': [
     {
       'target_name': 'wayland',
@@ -23,27 +20,27 @@
       'include_dirs': [
         '..',
       ],
-        'defines': [
+      'defines': [
         'OZONE_WAYLAND_IMPLEMENTATION',
       ],
       'sources': [
         'media/media_ozone_platform_wayland.cc',
         'media/media_ozone_platform_wayland.h',
-	'platform/client_native_pixmap_factory_wayland.cc',
-	'platform/client_native_pixmap_factory_wayland.h',
+        'platform/client_native_pixmap_factory_wayland.cc',
+        'platform/client_native_pixmap_factory_wayland.h',
         'platform/desktop_platform_screen.h',
-	'platform/desktop_platform_screen_delegate.h',
+        'platform/desktop_platform_screen_delegate.h',
         'platform/ozone_export_wayland.h',
-	'platform/messages.h',
-	'platform/message_generator.h',
-	'platform/message_generator.cc',
-	'platform/ozone_gpu_platform_support_host.h',
-	'platform/ozone_gpu_platform_support_host.cc',
+        'platform/messages.h',
+        'platform/message_generator.h',
+        'platform/message_generator.cc',
+        'platform/ozone_gpu_platform_support_host.h',
+        'platform/ozone_gpu_platform_support_host.cc',
         'platform/ozone_platform_wayland.cc',
         'platform/ozone_platform_wayland.h',
         'platform/ozone_wayland_window.cc',
         'platform/ozone_wayland_window.h',
-	'platform/window_constants.h',
+        'platform/window_constants.h',
         'platform/window_manager_wayland.cc',
         'platform/window_manager_wayland.h',
       ],
