@@ -6,6 +6,7 @@
 #define OZONE_IMPL_DESKTOP_AURA_DESKTOP_SCREEN_WAYLAND_H__
 
 #include <vector>
+#include "base/memory/scoped_ptr.h"
 
 #include "ozone/platform/desktop_platform_screen_delegate.h"
 #include "ui/gfx/display_change_notifier.h"

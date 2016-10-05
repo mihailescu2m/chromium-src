@@ -8,7 +8,7 @@
 #include "base/synchronization/waitable_event.h"
 #include "base/threading/thread.h"
 
-class wl_display;
+struct wl_display;
 namespace ozonewayland {
 // This class lets you poll on a given Wayland display (passed in constructor),
 // read any pending events coming from Wayland compositor and dispatch them.
@@ -30,9 +30,9 @@ class WaylandDisplayPollThread : public base::Thread {
 
  private:
   static void DisplayRun(WaylandDisplayPollThread* data);
+  wl_display* display_;
   base::WaitableEvent polling_;  // Is set as long as the thread is polling.
   base::WaitableEvent stop_polling_;
-  wl_display* display_;
   DISALLOW_COPY_AND_ASSIGN(WaylandDisplayPollThread);
 };
 
