@@ -112,8 +112,7 @@ DesktopDragDropClientWayland::DragDataCollector::DragDataCollector(
     const std::vector<std::string>& mime_types,
     gfx::AcceleratedWidget windowhandle)
     : drag_drop_client_(drag_drop_client),
-      os_exchange_data_(new ui::OSExchangeDataProviderAura),
-      windowhandle_(windowhandle) {
+      os_exchange_data_(new ui::OSExchangeDataProviderAura) {
   std::copy(mime_types.begin(),
             mime_types.end(),
             std::insert_iterator<std::list<std::string>>(
@@ -358,7 +357,7 @@ void DesktopDragDropClientWayland::OnDragMotion(float x,
   if (!delegate_)
     return;
 
-  scoped_ptr<ui::DropTargetEvent> event = CreateDropTargetEvent();
+  std::unique_ptr<ui::DropTargetEvent> event = CreateDropTargetEvent();
   if (event) {
     bool shouldAcceptDrag = delegate_->OnDragUpdated(*event);
 
@@ -373,7 +372,7 @@ void DesktopDragDropClientWayland::OnDragDrop() {
   VLOG(1) <<  __FUNCTION__;
 
   if (delegate_) {
-    scoped_ptr<ui::DropTargetEvent> event = CreateDropTargetEvent();
+    std::unique_ptr<ui::DropTargetEvent> event = CreateDropTargetEvent();
     // All the drag data is available. This is the usual case.
     delegate_->OnPerformDrop(*event);
     should_emit_drag_exited_ = false;
@@ -442,7 +441,7 @@ void DesktopDragDropClientWayland::OnDragDataCollected(
   if (!delegate_)
     return;
 
-  scoped_ptr<ui::DropTargetEvent> event = CreateDropTargetEvent();
+  std::unique_ptr<ui::DropTargetEvent> event = CreateDropTargetEvent();
   if (event) {
     VLOG(1) << "Sending OnDragEntered to DragDropDelegate";
     delegate_->OnDragEntered(*event);
@@ -455,7 +454,7 @@ void DesktopDragDropClientWayland::OnDragDataCollected(
       // earlier point in time than the coordinates reported for the drag enter,
       // which is weird, but harmless: it's only important that the drop occur
       // at the right place.
-      scoped_ptr<ui::DropTargetEvent> delayedEvent =
+      std::unique_ptr<ui::DropTargetEvent> delayedEvent =
           CreateDropTargetEvent(*delayed_drop_location_.get());
       delegate_->OnPerformDrop(*delayedEvent.get());
       DragDropSessionCompleted();
@@ -464,7 +463,7 @@ void DesktopDragDropClientWayland::OnDragDataCollected(
   }
 }
 
-scoped_ptr<ui::DropTargetEvent>
+std::unique_ptr<ui::DropTargetEvent>
 DesktopDragDropClientWayland::CreateDropTargetEvent(
     const gfx::Point& root_location) const {
   if (!target_window_)
@@ -482,14 +481,14 @@ DesktopDragDropClientWayland::CreateDropTargetEvent(
                                      target_window_,
                                      &target_location);
 
-  return scoped_ptr<ui::DropTargetEvent>(new ui::DropTargetEvent(
+  return std::unique_ptr<ui::DropTargetEvent>(new ui::DropTargetEvent(
       data_collector_->GetData(),
       target_location,
       root_location,
       drag_operations));
 }
 
-scoped_ptr<ui::DropTargetEvent>
+std::unique_ptr<ui::DropTargetEvent>
 DesktopDragDropClientWayland::CreateDropTargetEvent() const {
   gfx::Point root_location(point_.x(), point_.y());
   root_window_.GetHost()->ConvertPointFromNativeScreen(&root_location);

@@ -92,7 +92,7 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   // Returns WaylandWindow associated with w. The ownership is not transferred
   // to the caller.
   WaylandWindow* GetWindow(unsigned window_handle) const;
-  gfx::AcceleratedWidget GetNativeWindow(unsigned window_handle);
+  intptr_t GetNativeWindow(unsigned window_handle);
 
   // Destroys WaylandWindow whose handle is w.
   void DestroyWindow(unsigned w);
@@ -107,7 +107,7 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   intptr_t GetNativeDisplay() override;
 
   // Ownership is passed to the caller.
-  scoped_ptr<ui::SurfaceOzoneEGL> CreateEGLSurfaceForWidget(
+  std::unique_ptr<ui::SurfaceOzoneEGL> CreateEGLSurfaceForWidget(
       gfx::AcceleratedWidget widget) override;
 
   bool LoadEGLGLES2Bindings(
@@ -119,7 +119,7 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
       gfx::AcceleratedWidget widget, gfx::Size size, gfx::BufferFormat format,
           gfx::BufferUsage usage) override;
 
-  scoped_ptr<ui::SurfaceOzoneCanvas> CreateCanvasForWidget(
+  std::unique_ptr<ui::SurfaceOzoneCanvas> CreateCanvasForWidget(
       gfx::AcceleratedWidget widget) override;
 
   void MotionNotify(float x, float y);
@@ -242,8 +242,10 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   WaylandScreen* primary_screen_;
   WaylandSeat* primary_seat_;
   WaylandDisplayPollThread* display_poll_thread_;
+#if defined(ENABLE_DRM_SUPPORT)
   gbm_device* device_;
   char* m_deviceName;
+#endif
   IPC::Sender* sender_;
   base::MessageLoop* loop_;
 
@@ -254,9 +256,11 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   DeferredMessages deferred_messages_;
   unsigned serial_;
   bool processing_events_ :1;
+#if defined(ENABLE_DRM_SUPPORT)
   bool m_authenticated_ :1;
   int m_fd_;
   uint32_t m_capabilities_;
+#endif
   static WaylandDisplay* instance_;
   // Support weak pointers for attach & detach callbacks.
   base::WeakPtrFactory<WaylandDisplay> weak_ptr_factory_;
