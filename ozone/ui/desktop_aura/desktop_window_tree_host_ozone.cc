@@ -161,17 +161,17 @@ void DesktopWindowTreeHostOzone::OnNativeWidgetCreated(
   }
 }
 
-scoped_ptr<corewm::Tooltip>
+std::unique_ptr<corewm::Tooltip>
 DesktopWindowTreeHostOzone::CreateTooltip() {
-  return scoped_ptr<views::corewm::Tooltip>(new views::corewm::TooltipAura);
+  return std::unique_ptr<views::corewm::Tooltip>(new views::corewm::TooltipAura);
 }
 
-scoped_ptr<aura::client::DragDropClient>
+std::unique_ptr<aura::client::DragDropClient>
 DesktopWindowTreeHostOzone::CreateDragDropClient(
     DesktopNativeCursorManager* cursor_manager) {
   drag_drop_client_ = new DesktopDragDropClientWayland(window(),
                                                        platform_window_.get());
-  return make_scoped_ptr(drag_drop_client_);
+  return std::unique_ptr<aura::client::DragDropClient>(drag_drop_client_);
 }
 
 void DesktopWindowTreeHostOzone::Close() {
@@ -356,13 +356,18 @@ gfx::Rect DesktopWindowTreeHostOzone::GetRestoredBounds() const {
   return GetWindowBoundsInScreen();
 }
 
+std::string DesktopWindowTreeHostOzone::GetWorkspace() const {
+  NOTIMPLEMENTED();
+  return std::string();
+}
+
 gfx::Rect DesktopWindowTreeHostOzone::GetWorkAreaBoundsInScreen() const {
   // TODO(kalyan): Take into account wm decorations. i.e Dock, panel etc.
-  gfx::Screen *screen = gfx::Screen::GetScreen();
+  display::Screen *screen = display::Screen::GetScreen();
   if (!screen)
-    NOTREACHED() << "Unable to retrieve valid gfx::Screen";
+    NOTREACHED() << "Unable to retrieve valid display::Screen";
 
-  gfx::Display display = screen->GetPrimaryDisplay();
+  display::Display display = screen->GetPrimaryDisplay();
   return ToDIPRect(display.bounds());
 }
 
@@ -560,7 +565,7 @@ bool DesktopWindowTreeHostOzone::IsFullscreen() const {
   return state_ & FullScreen;
 }
 
-void DesktopWindowTreeHostOzone::SetOpacity(unsigned char opacity) {
+void DesktopWindowTreeHostOzone::SetOpacity(float opacity) {
   content_window_->layer()->SetOpacity(opacity / 255.0);
   platform_window_->SetOpacity(opacity);
 }
@@ -613,9 +618,9 @@ void DesktopWindowTreeHostOzone::SizeConstraintsChanged() {
 // DesktopWindowTreeHostOzone, aura::WindowTreeHost implementation:
 
 gfx::Transform DesktopWindowTreeHostOzone::GetRootTransform() const {
-  gfx::Display display = gfx::Screen::GetScreen()->GetPrimaryDisplay();
+  display::Display display = display::Screen::GetScreen()->GetPrimaryDisplay();
   aura::Window* win = const_cast<aura::Window*>(window());
-  display = gfx::Screen::GetScreen()->GetDisplayNearestWindow(win);
+  display = display::Screen::GetScreen()->GetDisplayNearestWindow(win);
 
   float scale = display.device_scale_factor();
   gfx::Transform transform;
@@ -965,8 +970,8 @@ DesktopWindowTreeHostOzone::open_windows() {
 
 gfx::Size DesktopWindowTreeHostOzone::AdjustSize(
     const gfx::Size& requested_size_in_pixels) {
-  std::vector<gfx::Display> displays =
-      gfx::Screen::GetScreen()->GetAllDisplays();
+  std::vector<display::Display> displays =
+      display::Screen::GetScreen()->GetAllDisplays();
   // Compare against all monitor sizes. The window manager can move the window
   // to whichever monitor it wants.
   for (size_t i = 0; i < displays.size(); ++i) {

@@ -8,7 +8,7 @@
 #include <string>
 
 #include "base/bind.h"
-#include "base/thread_task_runner_handle.h"
+#include "base/threading/thread_task_runner_handle.h"
 #include "ozone/platform/desktop_platform_screen_delegate.h"
 #include "ozone/platform/messages.h"
 #include "ozone/platform/ozone_gpu_platform_support_host.h"
@@ -457,7 +457,7 @@ void WindowManagerWayland::PostUiEvent(Event* event) {
   DispatchEvent(event);
 }
 
-void WindowManagerWayland::DispatchUiEventTask(scoped_ptr<Event> event) {
+void WindowManagerWayland::DispatchUiEventTask(std::unique_ptr<Event> event) {
   DispatchEvent(event.get());
 }
 
@@ -551,8 +551,8 @@ void WindowManagerWayland::NotifyTouchEvent(EventType type,
                                             int32_t touch_id,
                                             uint32_t time_stamp) {
   gfx::Point position(x, y);
-  base::TimeDelta time_delta = base::TimeDelta::FromMilliseconds(time_stamp);
-  TouchEvent touchev(type, position, touch_id, time_delta);
+  base::TimeTicks timestamp = ui::EventTimeForNow() + base::TimeDelta::FromMilliseconds(time_stamp);
+  TouchEvent touchev(type, position, touch_id, timestamp);
   DispatchEvent(&touchev);
 }
 

@@ -10,9 +10,10 @@
 #include "ozone/platform/ozone_gpu_platform_support_host.h"
 #include "ozone/platform/window_manager_wayland.h"
 #include "ui/base/cursor/ozone/bitmap_cursor_factory_ozone.h"
+#include "ui/display/display.h"
+#include "ui/display/screen.h"
 #include "ui/events/ozone/events_ozone.h"
 #include "ui/events/platform/platform_event_source.h"
-#include "ui/gfx/screen.h"
 #include "ui/platform_window/platform_window_delegate.h"
 
 namespace ui {
@@ -28,8 +29,7 @@ OzoneWaylandWindow::OzoneWaylandWindow(PlatformWindowDelegate* delegate,
       bounds_(bounds),
       parent_(0),
       state_(UNINITIALIZED),
-      region_(NULL),
-      cursor_type_(-1) {
+      region_(NULL) {
   static int opaque_handle = 0;
   opaque_handle++;
   handle_ = opaque_handle;
@@ -177,9 +177,9 @@ void OzoneWaylandWindow::ReleaseCapture() {
 }
 
 void OzoneWaylandWindow::ToggleFullscreen() {
-  gfx::Screen *screen = gfx::Screen::GetScreen();
+  display::Screen *screen = display::Screen::GetScreen();
   if (!screen)
-    NOTREACHED() << "Unable to retrieve valid gfx::Screen";
+    NOTREACHED() << "Unable to retrieve valid display::Screen";
 
   SetBounds(screen->GetPrimaryDisplay().bounds());
   state_ = ui::FULLSCREEN;
