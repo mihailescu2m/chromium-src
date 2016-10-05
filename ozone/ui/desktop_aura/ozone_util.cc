@@ -31,13 +31,3 @@ VIEWS_EXPORT bool IsFullScreenMode() {
       views::Widget::GetWidgetForNativeWindow(all_windows[0]);
   return widget && widget->IsFullscreen();
 }
-
-// TODO(Kalyan): Remove this once https://codereview.chromium.org/176893002/
-// is fixed.
-VIEWS_EXPORT gfx::NativeWindow GetLocalProcessWindowAtPoint(
-    chrome::HostDesktopType host_desktop_type,
-    const gfx::Point& screen_point,
-    const std::set<gfx::NativeWindow>& ignore,
-    gfx::NativeWindow source) {
-  return NULL;
-}

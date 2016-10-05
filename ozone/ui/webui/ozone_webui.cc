@@ -37,7 +37,11 @@ void OzoneWebUI::Initialize() {
 ui::SelectFileDialog* OzoneWebUI::CreateSelectFileDialog(
     ui::SelectFileDialog::Listener* listener,
     ui::SelectFilePolicy* policy) const {
+#if defined(USE_SELECT_FILE_DIALOG_WEBUI_IMPL)
   return ui::SelectFileDialogImplWebUI::Create(listener, policy);
+#endif
+  NOTIMPLEMENTED();
+  return nullptr;
 }
 
 scoped_ptr<ui::LinuxInputMethodContext> OzoneWebUI::CreateInputMethodContext(
@@ -144,7 +148,7 @@ gfx::Image OzoneWebUI::GetIconForContentType(
 scoped_ptr<Border> OzoneWebUI::CreateNativeBorder(
   views::LabelButton* owning_button,
   scoped_ptr<views::LabelButtonBorder> border) {
-  return border.Pass();
+  return std::move(border);
 }
 
 void OzoneWebUI::AddWindowButtonOrderObserver(

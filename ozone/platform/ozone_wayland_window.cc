@@ -177,7 +177,7 @@ void OzoneWaylandWindow::ReleaseCapture() {
 }
 
 void OzoneWaylandWindow::ToggleFullscreen() {
-  gfx::Screen *screen = gfx::Screen::GetScreenByType(gfx::SCREEN_TYPE_NATIVE);
+  gfx::Screen *screen = gfx::Screen::GetScreen();
   if (!screen)
     NOTREACHED() << "Unable to retrieve valid gfx::Screen";
 

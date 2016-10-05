@@ -11,7 +11,6 @@
 #include <string>
 #include <vector>
 
-#include "base/basictypes.h"
 #include "ui/aura/window_tree_host.h"
 #include "ui/platform_window/platform_window_delegate.h"
 #include "ui/views/widget/desktop_aura/desktop_window_tree_host.h"
