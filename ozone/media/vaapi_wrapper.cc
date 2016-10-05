@@ -146,7 +146,7 @@ VaapiWrapper::~VaapiWrapper() {
 }
 
 // static
-scoped_ptr<VaapiWrapper> VaapiWrapper::Create(
+std::unique_ptr<VaapiWrapper> VaapiWrapper::Create(
     CodecMode mode,
     VAProfile va_profile,
     const base::Closure& report_error_to_uma_cb) {
@@ -155,7 +155,7 @@ scoped_ptr<VaapiWrapper> VaapiWrapper::Create(
     return nullptr;
   }
 
-  scoped_ptr<VaapiWrapper> vaapi_wrapper(new VaapiWrapper());
+  std::unique_ptr<VaapiWrapper> vaapi_wrapper(new VaapiWrapper());
   if (vaapi_wrapper->VaInitialize(report_error_to_uma_cb)) {
     if (vaapi_wrapper->Initialize(mode, va_profile))
       return vaapi_wrapper.Pass();
@@ -165,12 +165,12 @@ scoped_ptr<VaapiWrapper> VaapiWrapper::Create(
 }
 
 // static
-scoped_ptr<VaapiWrapper> VaapiWrapper::CreateForVideoCodec(
+std::unique_ptr<VaapiWrapper> VaapiWrapper::CreateForVideoCodec(
     CodecMode mode,
     media::VideoCodecProfile profile,
     const base::Closure& report_error_to_uma_cb) {
   VAProfile va_profile = ProfileToVAProfile(profile, mode);
-  scoped_ptr<VaapiWrapper> vaapi_wrapper =
+  std::unique_ptr<VaapiWrapper> vaapi_wrapper =
       Create(mode, va_profile, report_error_to_uma_cb);
   return vaapi_wrapper.Pass();
 }
@@ -1111,7 +1111,7 @@ bool VaapiWrapper::PostSandboxInitialization() {
 VaapiWrapper::LazyProfileInfos::LazyProfileInfos() {
   static_assert(arraysize(supported_profiles_) == kCodecModeMax,
                 "The array size of supported profile is incorrect.");
-  scoped_ptr<VaapiWrapper> vaapi_wrapper(new VaapiWrapper());
+  std::unique_ptr<VaapiWrapper> vaapi_wrapper(new VaapiWrapper());
   if (!vaapi_wrapper->VaInitialize(base::Bind(&base::DoNothing)))
     return;
   for (size_t i = 0; i < kCodecModeMax; ++i) {
