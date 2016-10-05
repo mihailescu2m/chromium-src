@@ -23,7 +23,6 @@
 #include <string>
 #include <vector>
 
-#include "base/basictypes.h"
 #include "base/memory/shared_memory.h"
 #include "base/memory/weak_ptr.h"
 #include "ozone/platform/window_constants.h"
@@ -115,7 +114,7 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
       ui::SurfaceFactoryOzone::AddGLLibraryCallback add_gl_library,
       ui::SurfaceFactoryOzone::SetGLGetProcAddressProcCallback
       proc_address) override;
-  const int32* GetEGLSurfaceProperties(const int32* desired_list) override;
+
   scoped_refptr<ui::NativePixmap> CreateNativePixmap(
       gfx::AcceleratedWidget widget, gfx::Size size, gfx::BufferFormat format,
           gfx::BufferUsage usage) override;

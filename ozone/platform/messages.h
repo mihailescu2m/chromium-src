@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 
-#include "base/basictypes.h"
 #include "base/memory/shared_memory.h"
 #include "base/strings/string16.h"
 #include "ipc/ipc_message_macros.h"
@@ -19,11 +18,12 @@
 #include "ui/events/event_constants.h"
 #include "ui/gfx/geometry/rect.h"
 #include "ui/gfx/ipc/gfx_param_traits.h"
+#include "ui/gfx/ipc/skia/gfx_skia_param_traits.h"
 
 #define IPC_MESSAGE_START LastIPCMsgStart
 
 IPC_ENUM_TRAITS_MAX_VALUE(ui::EventFlags,
-                          ui::EF_ALTGR_DOWN)
+                          ui::EF_FORWARD_MOUSE_BUTTON)
 IPC_ENUM_TRAITS_MAX_VALUE(ui::EventType,
                           ui::ET_LAST)
 IPC_ENUM_TRAITS_MAX_VALUE(ui::WidgetState,

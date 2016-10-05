@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include "ozone/platform/channel_observer.h"
 #include "ozone/platform/ozone_gpu_platform_support_host.h"
 
 #include "base/trace_event/trace_event.h"
 #include "ui/ozone/common/gpu/ozone_gpu_message_params.h"
 #include "ui/ozone/common/gpu/ozone_gpu_messages.h"
-#include "ui/ozone/platform/drm/host/channel_observer.h"
 
 namespace ui {
 

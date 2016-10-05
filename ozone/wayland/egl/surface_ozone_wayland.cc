@@ -6,6 +6,8 @@
 
 #include "ozone/wayland/display.h"
 #include "ozone/wayland/window.h"
+#include "third_party/khronos/EGL/egl.h"
+#include "ui/ozone/common/egl_util.h"
 #include "ui/gfx/vsync_provider.h"
 
 namespace ozonewayland {
@@ -41,6 +43,26 @@ void SurfaceOzoneWayland::OnSwapBuffersAsync(
 
 scoped_ptr<gfx::VSyncProvider> SurfaceOzoneWayland::CreateVSyncProvider() {
   return scoped_ptr<gfx::VSyncProvider>();
+}
+
+void* /* EGLConfig */ SurfaceOzoneWayland::GetEGLSurfaceConfig(
+    const ui::EglConfigCallbacks& egl) {
+  EGLint config_attribs[] = {EGL_BUFFER_SIZE,
+                             32,
+                             EGL_ALPHA_SIZE,
+                             8,
+                             EGL_BLUE_SIZE,
+                             8,
+                             EGL_GREEN_SIZE,
+                             8,
+                             EGL_RED_SIZE,
+                             8,
+                             EGL_RENDERABLE_TYPE,
+                             EGL_OPENGL_ES2_BIT,
+                             EGL_SURFACE_TYPE,
+                             EGL_WINDOW_BIT,
+                             EGL_NONE};
+  return ChooseEGLConfig(egl, config_attribs);
 }
 
 }  // namespace ozonewayland
