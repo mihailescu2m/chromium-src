@@ -33,4 +33,8 @@ source_set("common") {
   ]
 
   visibility = [ "//ui/ozone/platform/*" ]
+
+  if (ozone_platform_wayland_external) {
+    visibility += [ "//ozone:ozone_wayland", ]
+  }
 }
