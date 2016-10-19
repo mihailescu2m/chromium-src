@@ -2006,6 +2006,21 @@ split_static_library("ui") {
     # This is the only component that can interact with gtk.
     deps += [ "//chrome/browser/ui/libgtkui" ]
   }
+  if (use_ozone) {
+    if (ozone_platform_wayland_external) {
+      deps += [
+        "//ozone/ui/webui",
+      ]
+      sources += [
+        "views/frame/browser_desktop_window_tree_host_ozone_wayland_external.cc",
+        "views/frame/browser_desktop_window_tree_host_ozone_wayland_external.h",
+      ]
+    } else {
+      sources += [
+        "views/frame/browser_desktop_window_tree_host_ozone_stub.cc",
+      ]
+    }
+  }
   if (is_win || is_mac || is_desktop_linux) {
     sources += [
       "avatar_button_error_controller.cc",
