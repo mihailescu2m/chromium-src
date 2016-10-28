@@ -83,7 +83,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   gfx::Rect GetRestoredBounds() const override;
   std::string GetWorkspace() const override;
   gfx::Rect GetWorkAreaBoundsInScreen() const override;
-  void SetShape(SkRegion* native_region) override;
+  void SetShape(std::unique_ptr<SkRegion> native_region) override;
   void Activate() override;
   void Deactivate() override;
   bool IsActive() const override;
@@ -96,6 +96,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   void SetAlwaysOnTop(bool always_on_top) override;
   bool IsAlwaysOnTop() const override;
   void SetVisibleOnAllWorkspaces(bool always_visible) override;
+  bool IsVisibleOnAllWorkspaces() const override;
   bool SetWindowTitle(const base::string16& title) override;
   void ClearNativeFocus() override;
   views::Widget::MoveLoopResult RunMoveLoop(
