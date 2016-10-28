@@ -19,7 +19,7 @@
 #include "ui/base/dragdrop/drag_drop_types.h"
 #include "ui/base/dragdrop/drop_target_event.h"
 #include "ui/base/dragdrop/file_info.h"
-#include "ui/base/dragdrop/os_exchange_data_provider_aura.h"
+#include "ui/base/dragdrop/os_exchange_data_provider_factory.h"
 #include "ui/platform_window/platform_window.h"
 
 // TODO(mcatanzaro): Add support for accepting drags from GTK+ and Qt.
@@ -112,8 +112,8 @@ DesktopDragDropClientWayland::DragDataCollector::DragDataCollector(
     const std::vector<std::string>& mime_types,
     gfx::AcceleratedWidget windowhandle)
     : drag_drop_client_(drag_drop_client),
-      os_exchange_data_(new ui::OSExchangeDataProviderAura) {
-  std::copy(mime_types.begin(),
+      os_exchange_data_(ui::OSExchangeDataProviderFactory::CreateProvider()) {
+            std::copy(mime_types.begin(),
             mime_types.end(),
             std::insert_iterator<std::list<std::string>>(
                 unprocessed_mime_types_,
