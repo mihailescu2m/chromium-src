@@ -371,7 +371,7 @@ gfx::Rect DesktopWindowTreeHostOzone::GetWorkAreaBoundsInScreen() const {
   return ToDIPRect(display.bounds());
 }
 
-void DesktopWindowTreeHostOzone::SetShape(SkRegion* native_region) {
+void DesktopWindowTreeHostOzone::SetShape(std::unique_ptr<SkRegion> native_region) {
   custom_window_shape_ = false;
   gfx::Path window_mask;
 
@@ -385,7 +385,6 @@ void DesktopWindowTreeHostOzone::SetShape(SkRegion* native_region) {
     }
 
     custom_window_shape_ = true;
-    delete native_region;
   }
 
   platform_window_->SetWindowShape(window_mask);
@@ -470,6 +469,11 @@ bool DesktopWindowTreeHostOzone::IsAlwaysOnTop() const {
 void DesktopWindowTreeHostOzone::SetVisibleOnAllWorkspaces(
     bool always_visible) {
   NOTIMPLEMENTED();
+}
+
+bool DesktopWindowTreeHostOzone::IsVisibleOnAllWorkspaces() const {
+  NOTIMPLEMENTED();
+  return false;
 }
 
 bool DesktopWindowTreeHostOzone::SetWindowTitle(const base::string16& title) {
