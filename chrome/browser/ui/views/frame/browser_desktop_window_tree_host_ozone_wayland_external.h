@@ -5,7 +5,7 @@
 #ifndef CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_ROOT_WINDOW_HOST_OZONE_H_
 #define CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_ROOT_WINDOW_HOST_OZONE_H_
 
-#include "ozone/ui/desktop_aura/desktop_window_tree_host_ozone.h"
+#include "ozone/ui/desktop_aura/desktop_window_tree_host_external_ozone.h"
 #include "chrome/browser/ui/views/frame/browser_desktop_window_tree_host.h"
 
 class BrowserFrame;

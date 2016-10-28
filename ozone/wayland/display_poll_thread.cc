@@ -15,7 +15,6 @@
 #include "ozone/wayland/display.h"
 
 namespace ozonewayland {
-const int MAX_EVENTS = 16;
 
 WaylandDisplayPollThread::WaylandDisplayPollThread(wl_display* display)
     : base::Thread("WaylandDisplayPollThread"),
@@ -54,7 +53,7 @@ void WaylandDisplayPollThread::CleanUp() {
 
 void  WaylandDisplayPollThread::DisplayRun(WaylandDisplayPollThread* data) {
   struct pollfd pollfd;
-  int i, ret, count = 0;
+  int ret, count = 0;
   uint32_t event = 0;
   unsigned display_fd = wl_display_get_fd(data->display_);
   pollfd.fd = display_fd;

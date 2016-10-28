@@ -55,10 +55,10 @@ void WindowManagerWayland::OnRootWindowClosed(
   if (active_window_ == window)
      active_window_ = NULL;
 
-  if (event_grabber_ == window->GetHandle())
+  if (event_grabber_ == gfx::AcceleratedWidget(window->GetHandle()))
     event_grabber_ = gfx::kNullAcceleratedWidget;
 
-  if (current_capture_ == window->GetHandle()) {
+  if (current_capture_ == gfx::AcceleratedWidget(window->GetHandle())) {
      OzoneWaylandWindow* window = GetWindow(current_capture_);
      window->GetDelegate()->OnLostCapture();
     current_capture_ = gfx::kNullAcceleratedWidget;
@@ -156,7 +156,7 @@ void WindowManagerWayland::OnActivationChanged(unsigned windowhandle,
     active_window_->GetDelegate()->OnActivationChanged(active);
   } else if (active_window_ == window) {
       active_window_->GetDelegate()->OnActivationChanged(active);
-      if (event_grabber_ == active_window_->GetHandle())
+      if (event_grabber_ == gfx::AcceleratedWidget(active_window_->GetHandle()))
          event_grabber_ = gfx::kNullAcceleratedWidget;
 
       active_window_ = NULL;
