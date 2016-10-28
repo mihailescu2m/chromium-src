@@ -26,7 +26,6 @@
 #include "ozone/wayland/data_device.h"
 #endif
 #include "ozone/wayland/display_poll_thread.h"
-#include "ozone/wayland/egl/surface_ozone_wayland.h"
 #if defined(ENABLE_DRM_SUPPORT)
 #include "ozone/wayland/egl/wayland_pixmap.h"
 #endif
@@ -39,6 +38,7 @@
 #include "ozone/wayland/seat.h"
 #include "ozone/wayland/shell/shell.h"
 #include "ozone/wayland/window.h"
+#include "ui/ozone/common/egl_util.h"
 #include "ui/ozone/public/native_pixmap.h"
 #include "ui/ozone/public/surface_ozone_canvas.h"
 
@@ -148,6 +148,15 @@ intptr_t WaylandDisplay::GetNativeWindow(unsigned window_handle) {
   return reinterpret_cast<intptr_t>(widget->egl_window());
 }
 
+std::unique_ptr<wl_egl_window, EGLWindowDeleter> WaylandDisplay::GetEglWindow(
+    unsigned window_handle) {
+  WaylandWindow* widget = GetWidget(window_handle);
+  DCHECK(widget);
+  widget->RealizeAcceleratedWidget();
+  return std::unique_ptr<wl_egl_window, EGLWindowDeleter>(
+      widget->egl_window());
+}
+
 bool WaylandDisplay::InitializeHardware() {
   InitializeDisplay();
   if (!display_) {
@@ -165,54 +174,30 @@ intptr_t WaylandDisplay::GetNativeDisplay() {
   return (intptr_t)display_;
 }
 
-std::unique_ptr<ui::SurfaceOzoneEGL> WaylandDisplay::CreateEGLSurfaceForWidget(
-    gfx::AcceleratedWidget w) {
-  return std::unique_ptr<ui::SurfaceOzoneEGL>(new SurfaceOzoneWayland(w));
+scoped_refptr<gl::GLSurface> WaylandDisplay::CreateViewGLSurface(
+    gl::GLImplementation implementation,
+    gfx::AcceleratedWidget widget) {
+  if (implementation != gl::kGLImplementationEGLGLES2) {
+    NOTREACHED();
+    return nullptr;
+  }
+
+  auto egl_window = GetEglWindow(widget);
+
+  if (!egl_window)
+    return nullptr;
+  return gl::InitializeGLSurface(new GLSurfaceWayland(std::move(egl_window)));
 }
 
-bool WaylandDisplay::LoadEGLGLES2Bindings(
-    ui::SurfaceFactoryOzone::AddGLLibraryCallback add_gl_library,
-    ui::SurfaceFactoryOzone::SetGLGetProcAddressProcCallback setprocaddress) {
-  // The variable EGL_PLATFORM specifies native platform to be used by the
-  // drivers (atleast on Mesa). When the variable is not set, Mesa uses the
-  // first platform listed in --with-egl-platforms during compilation. Thus, we
-  // ensure here that wayland is set as the native platform. However, we don't
-  // override the EGL_PLATFORM value in case it has already been set.
-  setenv("EGL_PLATFORM", "wayland", 0);
-  base::NativeLibraryLoadError error;
-  base::NativeLibrary gles_library = base::LoadNativeLibrary(
-    base::FilePath("libGLESv2.so.2"), &error);
-
-  if (!gles_library) {
-    LOG(WARNING) << "Failed to load GLES library: " << error.ToString();
-    return false;
+scoped_refptr<gl::GLSurface> WaylandDisplay::CreateOffscreenGLSurface(
+    gl::GLImplementation implementation,
+    const gfx::Size& size) {
+  if (implementation != gl::kGLImplementationEGLGLES2) {
+    NOTREACHED();
+    return nullptr;
   }
 
-  base::NativeLibrary egl_library = base::LoadNativeLibrary(
-    base::FilePath("libEGL.so.1"), &error);
-
-  if (!egl_library) {
-    LOG(WARNING) << "Failed to load EGL library: " << error.ToString();
-    base::UnloadNativeLibrary(gles_library);
-    return false;
-  }
-
-  GLGetProcAddressProc get_proc_address =
-      reinterpret_cast<GLGetProcAddressProc>(
-          base::GetFunctionPointerFromNativeLibrary(
-              egl_library, "eglGetProcAddress"));
-
-  if (!get_proc_address) {
-    LOG(ERROR) << "eglGetProcAddress not found.";
-    base::UnloadNativeLibrary(egl_library);
-    base::UnloadNativeLibrary(gles_library);
-    return false;
-  }
-
-  setprocaddress.Run(get_proc_address);
-  add_gl_library.Run(egl_library);
-  add_gl_library.Run(gles_library);
-  return true;
+  return gl::InitializeGLSurface(new gl::PbufferGLSurfaceEGL(size));
 }
 
 scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
@@ -232,6 +217,13 @@ scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
 #else
   return SurfaceFactoryOzone::CreateNativePixmap(widget, size, format, usage);
 #endif
+}
+
+bool WaylandDisplay::LoadEGLGLES2Bindings() {
+  if (!display_)
+    return false;
+  setenv("EGL_PLATFORM", "wayland", 0);
+  return ui::LoadDefaultEGLGLES2Bindings();
 }
 
 std::unique_ptr<ui::SurfaceOzoneCanvas> WaylandDisplay::CreateCanvasForWidget(
@@ -303,7 +295,7 @@ void WaylandDisplay::StopProcessingEvents() {
 void WaylandDisplay::Terminate() {
   loop_ = NULL;
   if (!widget_map_.empty()) {
-    STLDeleteValues(&widget_map_);
+    base::STLDeleteValues(&widget_map_);
     widget_map_.clear();
   }
 
