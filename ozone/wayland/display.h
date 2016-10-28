@@ -19,6 +19,7 @@
 #include <wayland-client.h>
 #include <list>
 #include <map>
+#include <memory>
 #include <queue>
 #include <string>
 #include <vector>
@@ -26,6 +27,7 @@
 #include "base/memory/shared_memory.h"
 #include "base/memory/weak_ptr.h"
 #include "ozone/platform/window_constants.h"
+#include "ozone/wayland/egl/gl_surface_wayland.h"
 #include "ui/events/event_constants.h"
 #include "ui/ozone/public/gpu_platform_support.h"
 #include "ui/ozone/public/surface_factory_ozone.h"
@@ -93,6 +95,8 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   // to the caller.
   WaylandWindow* GetWindow(unsigned window_handle) const;
   intptr_t GetNativeWindow(unsigned window_handle);
+  std::unique_ptr<wl_egl_window, EGLWindowDeleter> GetEglWindow(
+      unsigned window_handle);
 
   // Destroys WaylandWindow whose handle is w.
   void DestroyWindow(unsigned w);
@@ -107,13 +111,14 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   intptr_t GetNativeDisplay() override;
 
   // Ownership is passed to the caller.
-  std::unique_ptr<ui::SurfaceOzoneEGL> CreateEGLSurfaceForWidget(
+  scoped_refptr<gl::GLSurface> CreateViewGLSurface(
+      gl::GLImplementation implementation,
       gfx::AcceleratedWidget widget) override;
+  scoped_refptr<gl::GLSurface> CreateOffscreenGLSurface(
+      gl::GLImplementation implementation,
+      const gfx::Size& size) override;
 
-  bool LoadEGLGLES2Bindings(
-      ui::SurfaceFactoryOzone::AddGLLibraryCallback add_gl_library,
-      ui::SurfaceFactoryOzone::SetGLGetProcAddressProcCallback
-      proc_address) override;
+  bool LoadEGLGLES2Bindings() override;
 
   scoped_refptr<ui::NativePixmap> CreateNativePixmap(
       gfx::AcceleratedWidget widget, gfx::Size size, gfx::BufferFormat format,
