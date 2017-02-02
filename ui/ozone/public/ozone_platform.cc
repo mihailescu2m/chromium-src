@@ -82,10 +82,6 @@ OzonePlatform* OzonePlatform::EnsureInstance() {
 // static
 OzonePlatform* OzonePlatform::instance_ = nullptr;
 
-IPC::MessageFilter* OzonePlatform::GetGpuMessageFilter() {
-  return nullptr;
-}
-
 base::MessageLoop::Type OzonePlatform::GetMessageLoopTypeForGpu() {
   return base::MessageLoop::TYPE_DEFAULT;
 }

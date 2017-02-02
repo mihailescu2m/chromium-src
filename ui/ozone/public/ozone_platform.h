@@ -22,10 +22,6 @@ namespace gfx {
 class Rect;
 }
 
-namespace IPC {
-class MessageFilter;
-}
-
 namespace service_manager {
 class Connector;
 }
@@ -34,6 +30,7 @@ namespace ui {
 
 class CursorFactoryOzone;
 class InputController;
+class GpuPlatformSupport;
 class GpuPlatformSupportHost;
 class OverlayManagerOzone;
 class PlatformWindow;
@@ -103,7 +100,7 @@ class OZONE_EXPORT OzonePlatform {
   virtual ui::OverlayManagerOzone* GetOverlayManager() = 0;
   virtual ui::CursorFactoryOzone* GetCursorFactoryOzone() = 0;
   virtual ui::InputController* GetInputController() = 0;
-  virtual IPC::MessageFilter* GetGpuMessageFilter();
+  virtual ui::GpuPlatformSupport* GetGpuPlatformSupport() = 0;
   virtual ui::GpuPlatformSupportHost* GetGpuPlatformSupportHost() = 0;
   virtual std::unique_ptr<SystemInputInjector> CreateSystemInputInjector() = 0;
   virtual std::unique_ptr<PlatformWindow> CreatePlatformWindow(
