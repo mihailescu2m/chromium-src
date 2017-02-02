@@ -30,6 +30,7 @@
 #include "ui/ozone/platform/drm/gpu/drm_device_generator.h"
 #include "ui/ozone/platform/drm/gpu/drm_device_manager.h"
 #include "ui/ozone/platform/drm/gpu/drm_gpu_display_manager.h"
+#include "ui/ozone/platform/drm/gpu/drm_gpu_platform_support.h"
 #include "ui/ozone/platform/drm/gpu/drm_thread_message_proxy.h"
 #include "ui/ozone/platform/drm/gpu/drm_thread_proxy.h"
 #include "ui/ozone/platform/drm/gpu/gbm_surface_factory.h"
@@ -45,6 +46,7 @@
 #include "ui/ozone/platform/drm/host/drm_window_host_manager.h"
 #include "ui/ozone/platform/drm/host/host_drm_device.h"
 #include "ui/ozone/public/cursor_factory_ozone.h"
+#include "ui/ozone/public/gpu_platform_support.h"
 #include "ui/ozone/public/gpu_platform_support_host.h"
 #include "ui/ozone/public/ozone_platform.h"
 #include "ui/ozone/public/ozone_switches.h"
@@ -99,8 +101,8 @@ class OzonePlatformGbm : public OzonePlatform {
   InputController* GetInputController() override {
     return event_factory_ozone_->input_controller();
   }
-  IPC::MessageFilter* GetGpuMessageFilter() override {
-    return gpu_message_filter_.get();
+  GpuPlatformSupport* GetGpuPlatformSupport() override {
+    return gpu_platform_support_.get();
   }
   GpuPlatformSupportHost* GetGpuPlatformSupportHost() override {
     return gpu_platform_support_host_.get();
@@ -235,7 +237,7 @@ class OzonePlatformGbm : public OzonePlatform {
       scoped_refptr<DrmThreadMessageProxy> message_proxy(
           new DrmThreadMessageProxy());
       itmp = message_proxy.get();
-      gpu_message_filter_ = std::move(message_proxy);
+      gpu_platform_support_.reset(new DrmGpuPlatformSupport(message_proxy));
     }
 
     // NOTE: Can't start the thread here since this is called before sandbox
@@ -286,8 +288,8 @@ class OzonePlatformGbm : public OzonePlatform {
   std::unique_ptr<DrmThreadProxy> drm_thread_proxy_;
   std::unique_ptr<GlApiLoader> gl_api_loader_;
   std::unique_ptr<GbmSurfaceFactory> surface_factory_;
-  scoped_refptr<IPC::MessageFilter> gpu_message_filter_;
   scoped_refptr<base::SingleThreadTaskRunner> gpu_task_runner_;
+  std::unique_ptr<DrmGpuPlatformSupport> gpu_platform_support_;
 
   // TODO(rjkroege,sadrul): Provide a more elegant solution for this issue when
   // running in single process mode.

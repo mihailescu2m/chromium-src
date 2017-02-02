@@ -14,6 +14,7 @@
 #include "ui/ozone/platform/wayland/wayland_connection.h"
 #include "ui/ozone/platform/wayland/wayland_surface_factory.h"
 #include "ui/ozone/platform/wayland/wayland_window.h"
+#include "ui/ozone/public/gpu_platform_support.h"
 #include "ui/ozone/public/gpu_platform_support_host.h"
 #include "ui/ozone/public/input_controller.h"
 #include "ui/ozone/public/ozone_platform.h"
@@ -49,6 +50,10 @@ class OzonePlatformWayland : public OzonePlatform {
 
   InputController* GetInputController() override {
     return input_controller_.get();
+  }
+
+  GpuPlatformSupport* GetGpuPlatformSupport() override {
+    return gpu_platform_support_.get();
   }
 
   GpuPlatformSupportHost* GetGpuPlatformSupportHost() override {
@@ -109,6 +114,7 @@ class OzonePlatformWayland : public OzonePlatform {
       // gracefully fail.
       surface_factory_.reset(new WaylandSurfaceFactory(nullptr));
     }
+    gpu_platform_support_.reset(CreateStubGpuPlatformSupport());
   }
 
  private:
@@ -118,6 +124,7 @@ class OzonePlatformWayland : public OzonePlatform {
   std::unique_ptr<StubOverlayManager> overlay_manager_;
   std::unique_ptr<InputController> input_controller_;
   std::unique_ptr<GpuPlatformSupportHost> gpu_platform_support_host_;
+  std::unique_ptr<GpuPlatformSupport> gpu_platform_support_;
 
 #if BUILDFLAG(USE_XKBCOMMON)
   XkbEvdevCodes xkb_evdev_code_converter_;
