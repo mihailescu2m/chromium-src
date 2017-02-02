@@ -32,6 +32,7 @@
 #include "services/viz/privileged/interfaces/gl/gpu_service.mojom.h"
 
 #if defined(USE_OZONE)
+#include "ui/ozone/public/gpu_platform_support.h"
 #include "ui/ozone/public/ozone_platform.h"
 #endif
 
@@ -47,8 +48,9 @@ ChildThreadImpl::Options GetOptions() {
   ChildThreadImpl::Options::Builder builder;
 
 #if defined(USE_OZONE)
-  IPC::MessageFilter* message_filter =
-      ui::OzonePlatform::GetInstance()->GetGpuMessageFilter();
+  IPC::MessageFilter* message_filter = ui::OzonePlatform::GetInstance()
+                                           ->GetGpuPlatformSupport()
+                                           ->GetMessageFilter();
   if (message_filter)
     builder.AddStartupFilter(message_filter);
 #endif
@@ -271,6 +273,12 @@ void GpuChildThread::CreateGpuService(
       gpu::GpuProcessActivityFlags(std::move(activity_flags)),
       sync_point_manager, ChildProcess::current()->GetShutDownEvent());
   CHECK(gpu_service_->media_gpu_channel_manager());
+
+#if defined(USE_OZONE)
+  ui::OzonePlatform::GetInstance()
+      ->GetGpuPlatformSupport()
+      ->OnChannelEstablished(this);
+#endif
 
   // Only set once per process instance.
   service_factory_.reset(new GpuServiceFactory(
