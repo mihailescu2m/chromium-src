@@ -180,7 +180,7 @@ void DesktopWindowTreeHostOzone::Close() {
     // we don't destroy the window before the callback returned (as the caller
     // may delete ourselves on destroy and the ATL callback would still
     // dereference us when the callback returns).
-    base::MessageLoop::current()->PostTask(
+    base::MessageLoop::current()->task_runner()->PostTask(
         FROM_HERE,
         base::Bind(&DesktopWindowTreeHostOzone::CloseNow,
                    close_widget_factory_.GetWeakPtr()));
