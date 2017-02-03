@@ -74,9 +74,7 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
   void MaterialDesignControllerReady() override;
 
   // These methods are not needed
-  gfx::Image GetThemeImageNamed(int id) const override;
   bool GetColor(int id, SkColor* color) const override;
-  bool HasCustomImage(int id) const override;
   SkColor GetFocusRingColor() const override;
   SkColor GetThumbActiveColor() const override;
   SkColor GetThumbInactiveColor() const override;
