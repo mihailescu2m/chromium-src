@@ -69,15 +69,7 @@ void OzoneWebUI::GetDefaultFontDescription(
   NOTIMPLEMENTED();
 }
 
-gfx::Image OzoneWebUI::GetThemeImageNamed(int id) const {
-  return gfx::Image();
-}
-
 bool OzoneWebUI::GetColor(int id, SkColor* color) const {
-  return false;
-}
-
-bool OzoneWebUI::HasCustomImage(int id) const {
   return false;
 }
 
