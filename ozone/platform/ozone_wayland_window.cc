@@ -28,12 +28,17 @@ OzoneWaylandWindow::OzoneWaylandWindow(PlatformWindowDelegate* delegate,
       transparent_(false),
       bounds_(bounds),
       parent_(0),
+      type_(ui::WINDOWFRAMELESS),
       state_(UNINITIALIZED),
-      region_(NULL) {
+      region_(NULL),
+      init_window_(false) {
   static int opaque_handle = 0;
   opaque_handle++;
   handle_ = opaque_handle;
   delegate_->OnAcceleratedWidgetAvailable(opaque_handle, 1.0);
+
+  PlatformEventSource::GetInstance()->AddPlatformEventDispatcher(this);
+  sender_->AddChannelObserver(this);
 }
 
 OzoneWaylandWindow::~OzoneWaylandWindow() {
@@ -45,7 +50,6 @@ OzoneWaylandWindow::~OzoneWaylandWindow() {
 
 void OzoneWaylandWindow::InitPlatformWindow(
     PlatformWindowType type, gfx::AcceleratedWidget parent_window) {
-  PlatformEventSource::GetInstance()->AddPlatformEventDispatcher(this);
   switch (type) {
     case PLATFORM_WINDOW_TYPE_POPUP:
     case PLATFORM_WINDOW_TYPE_MENU: {
@@ -78,7 +82,16 @@ void OzoneWaylandWindow::InitPlatformWindow(
       break;
   }
 
-  sender_->AddChannelObserver(this);
+  init_window_ = true;
+
+  if (!sender_->IsConnected())
+    return;
+
+  sender_->Send(new WaylandDisplay_InitWindow(handle_,
+                                              parent_,
+                                              bounds_.x(),
+                                              bounds_.y(),
+                                              type_));
 }
 
 void OzoneWaylandWindow::SetTitle(const base::string16& title) {
@@ -240,11 +253,15 @@ uint32_t OzoneWaylandWindow::DispatchEvent(
 }
 
 void OzoneWaylandWindow::OnChannelEstablished() {
-  sender_->Send(new WaylandDisplay_Create(handle_,
-                                          parent_,
-                                          bounds_.x(),
-                                          bounds_.y(),
-                                          type_));
+  sender_->Send(new WaylandDisplay_Create(handle_));
+
+  if (init_window_)
+    sender_->Send(new WaylandDisplay_InitWindow(handle_,
+                                                parent_,
+                                                bounds_.x(),
+                                                bounds_.y(),
+                                                type_));
+
   if (state_)
     sender_->Send(new WaylandDisplay_State(handle_, state_));
 
