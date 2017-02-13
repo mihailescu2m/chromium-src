@@ -411,13 +411,17 @@ void WaylandDisplay::SetWidgetTitle(unsigned w, const base::string16& title) {
   widget->SetWindowTitle(title);
 }
 
-void WaylandDisplay::CreateWidget(unsigned widget,
-                                  unsigned parent,
-                                  int x,
-                                  int y,
-                                  ui::WidgetType type) {
+void WaylandDisplay::CreateWidget(unsigned widget) {
   DCHECK(!GetWidget(widget));
-  WaylandWindow* window = CreateAcceleratedSurface(widget);
+  CreateAcceleratedSurface(widget);
+}
+
+void WaylandDisplay::InitWindow(unsigned handle,
+                                unsigned parent,
+                                int x,
+                                int y,
+                                ui::WidgetType type) {
+  WaylandWindow* window = GetWidget(handle);
 
   WaylandWindow* parent_window = GetWidget(parent);
   DCHECK(window);
@@ -648,6 +652,7 @@ bool WaylandDisplay::OnMessageReceived(const IPC::Message& message) {
   IPC_BEGIN_MESSAGE_MAP(WaylandDisplay, message)
   IPC_MESSAGE_HANDLER(WaylandDisplay_State, SetWidgetState)
   IPC_MESSAGE_HANDLER(WaylandDisplay_Create, CreateWidget)
+  IPC_MESSAGE_HANDLER(WaylandDisplay_InitWindow, InitWindow)
   IPC_MESSAGE_HANDLER(WaylandDisplay_MoveWindow, MoveWindow)
   IPC_MESSAGE_HANDLER(WaylandDisplay_Title, SetWidgetTitle)
   IPC_MESSAGE_HANDLER(WaylandDisplay_AddRegion, AddRegion)

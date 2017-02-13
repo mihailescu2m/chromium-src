@@ -199,11 +199,12 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   WaylandWindow* GetWidget(unsigned w) const;
   void SetWidgetState(unsigned widget, ui::WidgetState state);
   void SetWidgetTitle(unsigned w, const base::string16& title);
-  void CreateWidget(unsigned widget,
-                    unsigned parent,
-                    int x,
-                    int y,
-                    ui::WidgetType type);
+  void CreateWidget(unsigned widget);
+  void InitWindow(unsigned widget,
+                  unsigned parent,
+                  int x,
+                  int y,
+                  ui::WidgetType type);
   void MoveWindow(unsigned widget, unsigned parent,
                   ui::WidgetType type, const gfx::Rect& rect);
   void AddRegion(unsigned widget, int left, int top, int right, int bottom);
