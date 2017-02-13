@@ -149,7 +149,10 @@ IPC_MESSAGE_CONTROL2(WaylandDisplay_State,  // NOLINT(readability/fn_size)
                      unsigned /* window handle */,
                      ui::WidgetState /*state*/)
 
-IPC_MESSAGE_CONTROL5(WaylandDisplay_Create,  // NOLINT(readability/fn_size)
+IPC_MESSAGE_CONTROL1(WaylandDisplay_Create,  // NOLINT(readability/fn_size)
+                     unsigned /* window handle */)
+
+IPC_MESSAGE_CONTROL5(WaylandDisplay_InitWindow,  // NOLINT(readability/fn_size)
                      unsigned /* window handle */,
                      unsigned /* window parent */,
                      int /* x */,
