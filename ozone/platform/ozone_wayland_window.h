@@ -89,6 +89,7 @@ class OzoneWaylandWindow : public PlatformWindow,
   base::string16 title_;
   // The current cursor bitmap (immutable).
   scoped_refptr<BitmapCursorOzone> bitmap_;
+  bool init_window_;
 
   DISALLOW_COPY_AND_ASSIGN(OzoneWaylandWindow);
 };
