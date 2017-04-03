@@ -197,7 +197,12 @@ scoped_refptr<gl::GLSurface> WaylandDisplay::CreateOffscreenGLSurface(
     return nullptr;
   }
 
-  return gl::InitializeGLSurface(new gl::PbufferGLSurfaceEGL(size));
+  if (gl::GLSurfaceEGL::IsEGLSurfacelessContextSupported() &&
+      size.width() == 0 && size.height() == 0) {
+    return gl::InitializeGLSurface(new gl::SurfacelessEGL(size));
+  } else {
+    return gl::InitializeGLSurface(new gl::PbufferGLSurfaceEGL(size));
+  }
 }
 
 scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
