@@ -22,7 +22,7 @@ void OzoneGpuPlatformSupportHost::RegisterHandler(
   handlers_.push_back(handler);
 
   if (IsConnected())
-    handler->OnChannelEstablished(host_id_, send_runner_, send_callback_);
+    handler->OnGpuProcessLaunched(host_id_, send_runner_, send_callback_);
 }
 
 void OzoneGpuPlatformSupportHost::UnregisterHandler(
@@ -50,21 +50,28 @@ bool OzoneGpuPlatformSupportHost::IsConnected() {
   return host_id_ >= 0;
 }
 
-void OzoneGpuPlatformSupportHost::OnChannelEstablished(
+void OzoneGpuPlatformSupportHost::OnGpuProcessLaunched(
     int host_id,
     scoped_refptr<base::SingleThreadTaskRunner> send_runner,
     const base::Callback<void(IPC::Message*)>& send_callback) {
-  TRACE_EVENT1("drm", "OzoneGpuPlatformSupportHost::OnChannelEstablished",
+  TRACE_EVENT1("drm", "OzoneGpuPlatformSupportHost::OnGpuProcessLaunched",
                "host_id", host_id);
+
   host_id_ = host_id;
   send_runner_ = send_runner;
   send_callback_ = send_callback;
 
   for (size_t i = 0; i < handlers_.size(); ++i)
-    handlers_[i]->OnChannelEstablished(host_id, send_runner_, send_callback_);
+    handlers_[i]->OnGpuProcessLaunched(host_id, send_runner_, send_callback_);
+}
 
-  FOR_EACH_OBSERVER(ChannelObserver, channel_observers_,
-                    OnChannelEstablished());
+void OzoneGpuPlatformSupportHost::OnChannelEstablished() {
+  TRACE_EVENT0("drm", "OzoneGpuPlatformSupportHost::OnChannelEstablished")
+  for (size_t i = 0; i < handlers_.size(); ++i)
+    handlers_[i]->OnChannelEstablished();
+
+  for (auto& observer : channel_observers_)
+    observer.OnChannelEstablished();
 }
 
 void OzoneGpuPlatformSupportHost::OnChannelDestroyed(int host_id) {
@@ -74,8 +81,8 @@ void OzoneGpuPlatformSupportHost::OnChannelDestroyed(int host_id) {
     host_id_ = -1;
     send_runner_ = nullptr;
     send_callback_.Reset();
-    FOR_EACH_OBSERVER(ChannelObserver, channel_observers_,
-                      OnChannelDestroyed());
+    for (auto& observer : channel_observers_)
+      observer.OnChannelDestroyed();
   }
 
   for (size_t i = 0; i < handlers_.size(); ++i)
