@@ -71,7 +71,6 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
 
   // ui::LinuxUI:
   void Initialize() override;
-  void MaterialDesignControllerReady() override;
 
   // These methods are not needed
   bool GetColor(int id, SkColor* color) const override;
@@ -109,7 +108,7 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
   bool MatchEvent(const ui::Event& event,
                   std::vector<TextEditCommandAuraLinux>* commands) override;
 
-  void UpdateDeviceScaleFactor(float scalefactor) override;
+  void UpdateDeviceScaleFactor() override;
   float GetDeviceScaleFactor() const override;
   bool GetTint(int id, color_utils::HSL* tint) const override;
 
