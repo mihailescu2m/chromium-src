@@ -241,16 +241,6 @@ int DesktopDragDropClientWayland::StartDragAndDrop(
   return false;
 }
 
-void DesktopDragDropClientWayland::DragUpdate(aura::Window* target,
-                                              const ui::LocatedEvent& event) {
-  NOTIMPLEMENTED();
-}
-
-void DesktopDragDropClientWayland::Drop(aura::Window* target,
-                                        const ui::LocatedEvent& event) {
-  NOTIMPLEMENTED();
-}
-
 void DesktopDragDropClientWayland::DragCancel() {
   NOTIMPLEMENTED();
 }
