@@ -116,8 +116,6 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   void InitModalType(ui::ModalType modal_type) override;
   void FlashFrame(bool flash_frame) override;
   void OnRootViewLayout() override;
-  void OnNativeWidgetFocus() override;
-  void OnNativeWidgetBlur() override;
   bool IsAnimatingClosed() const override;
   bool IsTranslucentWindowOpacitySupported() const override;
   void SizeConstraintsChanged() override;
