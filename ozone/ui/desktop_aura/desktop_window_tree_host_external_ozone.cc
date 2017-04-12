@@ -600,12 +600,6 @@ void DesktopWindowTreeHostOzone::FlashFrame(bool flash_frame) {
 void DesktopWindowTreeHostOzone::OnRootViewLayout() {
 }
 
-void DesktopWindowTreeHostOzone::OnNativeWidgetFocus() {
-}
-
-void DesktopWindowTreeHostOzone::OnNativeWidgetBlur() {
-}
-
 bool DesktopWindowTreeHostOzone::IsAnimatingClosed() const {
   return false;
 }

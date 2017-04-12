@@ -34,10 +34,6 @@ void OzoneWebUI::Initialize() {
       platform->GetGpuPlatformSupportHost());
 }
 
-void OzoneWebUI::MaterialDesignControllerReady() {
-  NOTIMPLEMENTED();
-}
-
 ui::SelectFileDialog* OzoneWebUI::CreateSelectFileDialog(
     ui::SelectFileDialog::Listener* listener,
     ui::SelectFilePolicy* policy) const {
@@ -173,7 +169,7 @@ bool OzoneWebUI::MatchEvent(const ui::Event& event,
   return false;
 }
 
-void OzoneWebUI::UpdateDeviceScaleFactor(float scalefactor) {
+void OzoneWebUI::UpdateDeviceScaleFactor() {
 }
 
 float OzoneWebUI::GetDeviceScaleFactor() const {

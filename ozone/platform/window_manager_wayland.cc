@@ -231,9 +231,13 @@ void WindowManagerWayland::OnWindowActivated(unsigned windowhandle) {
 
 ////////////////////////////////////////////////////////////////////////////////
 // GpuPlatformSupportHost implementation:
-void WindowManagerWayland::OnChannelEstablished(
-  int host_id, scoped_refptr<base::SingleThreadTaskRunner> send_runner,
-      const base::Callback<void(IPC::Message*)>& send_callback) {
+void WindowManagerWayland::OnGpuProcessLaunched(
+    int host_id,
+    scoped_refptr<base::SingleThreadTaskRunner> send_runner,
+    const base::Callback<void(IPC::Message*)>& send_callback) {
+}
+
+void WindowManagerWayland::OnChannelEstablished() {
 }
 
 void WindowManagerWayland::OnChannelDestroyed(int host_id) {

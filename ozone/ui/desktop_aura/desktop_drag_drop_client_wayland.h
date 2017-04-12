@@ -15,8 +15,8 @@
 #include "ui/base/dragdrop/os_exchange_data.h"
 #include "ui/gfx/geometry/point.h"
 #include "ui/views/views_export.h"
-#include "ui/wm/public/drag_drop_client.h"
-#include "ui/wm/public/drag_drop_delegate.h"
+#include "ui/aura/client/drag_drop_client.h"
+#include "ui/aura/client/drag_drop_delegate.h"
 
 namespace ui {
 
@@ -41,10 +41,6 @@ class VIEWS_EXPORT DesktopDragDropClientWayland
                        const gfx::Point& root_location,
                        int operation,
                        ui::DragDropTypes::DragEventSource source) override;
-  void DragUpdate(aura::Window* target,
-                  const ui::LocatedEvent& event) override;
-  void Drop(aura::Window* target,
-            const ui::LocatedEvent& event) override;
   void DragCancel() override;
   bool IsDragDropInProgress() override;
 
