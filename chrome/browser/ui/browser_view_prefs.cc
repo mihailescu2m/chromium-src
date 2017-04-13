@@ -14,10 +14,6 @@
 #include "ui/base/x/x11_util.h"  // nogncheck
 #endif
 
-#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
-#include "ozone/ui/desktop_aura/ozone_util.h"
-#endif
-
 namespace {
 
 // DEPRECATED: this is replaced by kTabStripStackedLayout and exists for

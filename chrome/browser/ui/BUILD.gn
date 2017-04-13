@@ -1698,7 +1698,7 @@ split_static_library("ui") {
     #
     # TODO(tonikitoo): It seems sensible to make it possible to opt-in
     # the use of these files in case Gtk is available with its Wayland.
-    if (use_aura && !use_ozone && is_desktop_linux) {
+    if (use_aura && is_desktop_linux) {
       sources += [
         "views/chrome_browser_main_extra_parts_views_linux.cc",
         "views/chrome_browser_main_extra_parts_views_linux.h",
@@ -2052,21 +2052,6 @@ split_static_library("ui") {
   if (use_aura && !use_ozone && is_desktop_linux) {
     # This is the only component that can interact with gtk.
     deps += [ "//chrome/browser/ui/libgtkui" ]
-  }
-  if (use_ozone) {
-    if (ozone_platform_wayland_external) {
-      deps += [
-        "//ozone/ui/webui",
-      ]
-      sources += [
-        "views/frame/browser_desktop_window_tree_host_ozone_wayland_external.cc",
-        "views/frame/browser_desktop_window_tree_host_ozone_wayland_external.h",
-      ]
-    } else {
-      sources += [
-        "views/frame/browser_desktop_window_tree_host_ozone_stub.cc",
-      ]
-    }
   }
   if (is_win || is_mac || is_desktop_linux) {
     sources += [
@@ -3295,6 +3280,18 @@ split_static_library("ui") {
         "views/frame/browser_desktop_window_tree_host_ozone.cc",
         "views/frame/native_browser_frame_factory_ozone.cc",
       ]
+      if (ozone_platform_wayland_external) {
+        sources -= [
+          "views/frame/browser_desktop_window_tree_host_ozone.cc",
+        ]
+        sources += [
+          "views/frame/browser_desktop_window_tree_host_ozone_wayland_external.cc",
+          "views/frame/browser_desktop_window_tree_host_ozone_wayland_external.h",
+        ]
+        deps += [
+          "//ozone/ui/webui",
+        ]
+      }
     }
   }
   if (is_linux) {  # Both desktop Linux and ChromeOS.

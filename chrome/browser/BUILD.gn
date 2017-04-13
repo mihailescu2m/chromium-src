@@ -434,7 +434,6 @@ split_static_library("browser") {
     "fullscreen.h",
     "fullscreen_chromeos.cc",
     "fullscreen_mac.mm",
-    "fullscreen_ozone.cc",
     "fullscreen_win.cc",
     "gcm/gcm_product_util.cc",
     "gcm/gcm_product_util.h",
