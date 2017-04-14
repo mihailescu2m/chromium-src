@@ -39,6 +39,7 @@ OzoneWaylandWindow::OzoneWaylandWindow(PlatformWindowDelegate* delegate,
 
   PlatformEventSource::GetInstance()->AddPlatformEventDispatcher(this);
   sender_->AddChannelObserver(this);
+  window_manager_->OnRootWindowCreated(this);
 }
 
 OzoneWaylandWindow::~OzoneWaylandWindow() {
@@ -58,7 +59,6 @@ void OzoneWaylandWindow::InitPlatformWindow(
         parent_ = window_manager_->GetActiveWindow()->GetHandle();
       type_ = ui::POPUP;
       ValidateBounds();
-      window_manager_->OnRootWindowCreated(this);
       break;
     }
     case PLATFORM_WINDOW_TYPE_TOOLTIP: {
@@ -73,7 +73,6 @@ void OzoneWaylandWindow::InitPlatformWindow(
     case PLATFORM_WINDOW_TYPE_WINDOW:
       parent_ = 0;
       type_ = ui::WINDOW;
-      window_manager_->OnRootWindowCreated(this);
       break;
     case PLATFORM_WINDOW_TYPE_WINDOW_FRAMELESS:
       NOTIMPLEMENTED();
