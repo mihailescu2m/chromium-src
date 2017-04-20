@@ -4,7 +4,8 @@
 
 #include "ozone/wayland/egl/gl_surface_wayland.h"
 
-#include <wayland-egl.h>
+#include "ozone/wayland/display.h"
+#include "ozone/wayland/window.h"
 
 #include <utility>
 
@@ -13,15 +14,11 @@
 
 namespace ozonewayland {
 
-void EGLWindowDeleter::operator()(wl_egl_window* egl_window) {
-  wl_egl_window_destroy(egl_window);
-}
-
-GLSurfaceWayland::GLSurfaceWayland(WaylandEglWindowPtr egl_window)
+GLSurfaceWayland::GLSurfaceWayland(unsigned widget)
     : NativeViewGLSurfaceEGL(
-          reinterpret_cast<EGLNativeWindowType>(egl_window.get())),
-      egl_window_(std::move(egl_window)) {
-  DCHECK(egl_window_);
+          reinterpret_cast<EGLNativeWindowType>(
+          WaylandDisplay::GetInstance()->GetEglWindow(widget))),
+      widget_(widget) {
 }
 
 bool GLSurfaceWayland::Resize(const gfx::Size& size,
@@ -29,7 +26,10 @@ bool GLSurfaceWayland::Resize(const gfx::Size& size,
                               bool has_alpha) {
   if (size_ == size)
     return true;
-  wl_egl_window_resize(egl_window_.get(), size.width(), size.height(), 0, 0);
+
+  WaylandWindow* window = WaylandDisplay::GetInstance()->GetWindow(widget_);
+  DCHECK(window);
+  window->Resize(size.width(), size.height());
   size_ = size;
   return true;
 }
@@ -57,6 +57,8 @@ EGLConfig GLSurfaceWayland::GetConfig() {
 }
 
 GLSurfaceWayland::~GLSurfaceWayland() {
+  WaylandDisplay::GetInstance()->DestroyWindow(widget_);
+  WaylandDisplay::GetInstance()->FlushDisplay();
   Destroy();
 }
 
