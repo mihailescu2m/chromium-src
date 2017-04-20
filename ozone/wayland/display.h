@@ -95,8 +95,7 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   // to the caller.
   WaylandWindow* GetWindow(unsigned window_handle) const;
   intptr_t GetNativeWindow(unsigned window_handle);
-  std::unique_ptr<wl_egl_window, EGLWindowDeleter> GetEglWindow(
-      unsigned window_handle);
+  wl_egl_window* GetEglWindow(unsigned window_handle);
 
   // Destroys WaylandWindow whose handle is w.
   void DestroyWindow(unsigned w);
