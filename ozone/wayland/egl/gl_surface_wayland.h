@@ -11,20 +11,13 @@
 #include "ui/gfx/geometry/size.h"
 #include "ui/gl/gl_surface_egl.h"
 
-struct wl_egl_window;
-
 namespace ozonewayland {
-
-struct EGLWindowDeleter {
-  void operator()(wl_egl_window* egl_window);
-};
 
 // GLSurface class implementation for wayland.
 class GLSurfaceWayland : public gl::NativeViewGLSurfaceEGL {
  public:
-  using WaylandEglWindowPtr = std::unique_ptr<wl_egl_window, EGLWindowDeleter>;
 
-  explicit GLSurfaceWayland(WaylandEglWindowPtr egl_window);
+  explicit GLSurfaceWayland(unsigned widget);
 
   // gl::GLSurface:
   bool Resize(const gfx::Size& size,
@@ -35,7 +28,7 @@ class GLSurfaceWayland : public gl::NativeViewGLSurfaceEGL {
  private:
   ~GLSurfaceWayland() override;
 
-  WaylandEglWindowPtr egl_window_;
+  unsigned widget_;
 
   DISALLOW_COPY_AND_ASSIGN(GLSurfaceWayland);
 };

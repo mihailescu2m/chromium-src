@@ -148,13 +148,12 @@ intptr_t WaylandDisplay::GetNativeWindow(unsigned window_handle) {
   return reinterpret_cast<intptr_t>(widget->egl_window());
 }
 
-std::unique_ptr<wl_egl_window, EGLWindowDeleter> WaylandDisplay::GetEglWindow(
+wl_egl_window* WaylandDisplay::GetEglWindow(
     unsigned window_handle) {
   WaylandWindow* widget = GetWidget(window_handle);
   DCHECK(widget);
   widget->RealizeAcceleratedWidget();
-  return std::unique_ptr<wl_egl_window, EGLWindowDeleter>(
-      widget->egl_window());
+  return widget->egl_window();
 }
 
 bool WaylandDisplay::InitializeHardware() {
@@ -182,11 +181,7 @@ scoped_refptr<gl::GLSurface> WaylandDisplay::CreateViewGLSurface(
     return nullptr;
   }
 
-  auto egl_window = GetEglWindow(widget);
-
-  if (!egl_window)
-    return nullptr;
-  return gl::InitializeGLSurface(new GLSurfaceWayland(std::move(egl_window)));
+  return gl::InitializeGLSurface(new GLSurfaceWayland(widget));
 }
 
 scoped_refptr<gl::GLSurface> WaylandDisplay::CreateOffscreenGLSurface(
