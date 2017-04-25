@@ -11,8 +11,7 @@
 #include "base/strings/string16.h"
 #include "base/strings/string_split.h"
 #include "base/strings/utf_string_conversions.h"
-#include "base/threading/thread_restrictions.h"
-#include "content/public/browser/browser_thread.h"
+#include "base/threading/thread_task_runner_handle.h"
 #include "ui/aura/window.h"
 #include "ui/aura/window_tree_host.h"
 #include "ui/base/clipboard/clipboard.h"
@@ -189,8 +188,7 @@ void DesktopDragDropClientWayland::DragDataCollector::ReadDragData(
   data_collector->unprocessed_mime_types_.erase(
       data_collector->unprocessed_mime_types_.begin());
 
-  content::BrowserThread::PostTask(
-      content::BrowserThread::UI,
+  base::ThreadTaskRunnerHandle::Get()->PostTask(
       FROM_HERE,
       base::Bind(
           &DesktopDragDropClientWayland::DragDataCollector::HandleNextMimeType,
@@ -310,10 +308,11 @@ void DesktopDragDropClientWayland::OnDragDataReceived(int pipefd) {
   }
 
   data_collector_->SetPipeFd(pipefd);
-  content::BrowserThread::PostTask(
-      content::BrowserThread::FILE_USER_BLOCKING,
+
+  base::ThreadTaskRunnerHandle::Get()->PostTask(
       FROM_HERE,
-      base::Bind(&DesktopDragDropClientWayland::DragDataCollector::ReadDragData,
+      base::Bind(
+          &DesktopDragDropClientWayland::DragDataCollector::ReadDragData,
                  data_collector_));
 }
 

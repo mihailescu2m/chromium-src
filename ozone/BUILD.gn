@@ -38,6 +38,7 @@ source_set("ozone_wayland") {
     "//ui/display:display",
     "//ui/events/ozone:events_ozone",
     "//ui/events/ozone:events_ozone_evdev",
+    "//ui/events/ozone:events_ozone_layout",
     "//ui/gfx/ipc",
     "//ui/ozone:ozone_base",
     "//ui/ozone/common",
