@@ -12,6 +12,7 @@ class ChannelObserver {
  public:
   virtual ~ChannelObserver() {}
 
+  virtual void OnGpuProcessLaunched() = 0;
   virtual void OnChannelEstablished() = 0;
   virtual void OnChannelDestroyed() = 0;
 };
