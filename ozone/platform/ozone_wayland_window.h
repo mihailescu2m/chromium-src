@@ -67,10 +67,12 @@ class OzoneWaylandWindow : public PlatformWindow,
   uint32_t DispatchEvent(const PlatformEvent& event) override;
 
   // ChannelObserver:
+  void OnGpuProcessLaunched() override;
   void OnChannelEstablished() override;
   void OnChannelDestroyed() override;
 
  private:
+  void DeferredSendingToGpu();
   void SendWidgetState();
   void AddRegion();
   void ResetRegion();
