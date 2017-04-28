@@ -251,7 +251,17 @@ uint32_t OzoneWaylandWindow::DispatchEvent(
   return POST_DISPATCH_STOP_PROPAGATION;
 }
 
+void OzoneWaylandWindow::OnGpuProcessLaunched() {
+  if (sender_->IsConnected())
+    DeferredSendingToGpu();
+}
+
 void OzoneWaylandWindow::OnChannelEstablished() {
+  if (sender_->IsConnected())
+    DeferredSendingToGpu();
+}
+
+void OzoneWaylandWindow::DeferredSendingToGpu() {
   sender_->Send(new WaylandDisplay_Create(handle_));
 
   if (init_window_)
@@ -320,6 +330,11 @@ void OzoneWaylandWindow::SetCursor() {
 
 void OzoneWaylandWindow::ValidateBounds() {
   DCHECK(parent_);
+  if (!parent_) {
+    LOG(INFO) << "Validate bounds will not do, parent is null";
+    return;
+  }
+
   gfx::Rect parent_bounds = window_manager_->GetWindow(parent_)->GetBounds();
   int x = bounds_.x() - parent_bounds.x();
   int y = bounds_.y() - parent_bounds.y();
