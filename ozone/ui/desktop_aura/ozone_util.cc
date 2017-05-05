@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "chrome/browser/ui/views/tabs/window_finder.h"
-#include "ozone/ui/desktop_aura/desktop_window_tree_host_external_ozone.h"
+#include "ozone/ui/desktop_aura/desktop_window_tree_host_ozone_wayland.h"
 
 namespace ui {
 
