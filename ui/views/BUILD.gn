@@ -30,12 +30,6 @@ aggregate_vector_icons("views_vector_icons") {
   ]
 }
 
-if (ozone_platform_wayland_external) {
-  ozone_platforms = [ "wayland" ]
-  platform_list_txt_file = "$target_gen_dir/platform_list.txt"
-  constructor_list_cc_file = "$target_gen_dir/constructor_list.cc"
-}
-
 component("views") {
   all_dependent_configs = [ ":flags" ]
   sources = [
@@ -507,6 +501,9 @@ component("views") {
 
   if (use_ozone) {
     deps += [ "//ui/ozone" ]
+    if (ozone_platform_wayland_external) {
+      deps += [ "//ozone/ui/desktop_aura:views_ozone_wayland" ]
+    }
   }
   if (use_x11) {
     configs += [
@@ -643,28 +640,6 @@ component("views") {
           "widget/desktop_aura/desktop_screen_ozone.cc",
           "widget/desktop_aura/desktop_window_tree_host_ozone.cc",
         ]
-        if (ozone_platform_wayland_external) {
-          sources += [
-            "//ozone/ui/desktop_aura/desktop_drag_drop_client_wayland.cc",
-            "//ozone/ui/desktop_aura/desktop_drag_drop_client_wayland.h",
-            "//ozone/ui/desktop_aura/desktop_factory_ozone_stubs.cc",
-            "//ozone/ui/desktop_aura/desktop_factory_ozone_stubs.h",
-            "//ozone/ui/desktop_aura/desktop_factory_ozone_wayland.cc",
-            "//ozone/ui/desktop_aura/desktop_factory_ozone_wayland.h",
-            "//ozone/ui/desktop_aura/desktop_platform_screen.h",
-            "//ozone/ui/desktop_aura/desktop_screen_wayland.cc",
-            "//ozone/ui/desktop_aura/desktop_screen_wayland.h",
-            "//ozone/ui/desktop_aura/desktop_window_tree_host_external_ozone.cc",
-            "//ozone/ui/desktop_aura/desktop_window_tree_host_external_ozone.h",
-            "//ozone/ui/desktop_aura/ozone_util.cc",
-            "//ozone/ui/desktop_aura/ozone_util.h",
-            constructor_list_cc_file,
-          ]
-          deps += [
-            ":generate_ozone_platform_list",
-            ":generate_constructor_list",
-          ]
-        }
       }
       if (is_linux) {
         sources += [ "style/platform_style_linux.cc" ]
@@ -699,45 +674,6 @@ component("views") {
   }
 }
 
-if (ozone_platform_wayland_external) {
-# GYP version: ui/ozone/ozone.gyp:generate_ozone_platform_list
-  action("generate_ozone_platform_list") {
-    script = "//ui/ozone/generate_ozone_platform_list.py"
-    outputs = [
-      platform_list_txt_file,
-    ]
-
-    args =
-        [
-          "--output_txt=" + rebase_path(platform_list_txt_file, root_build_dir),
-          "--default=$ozone_platform",
-        ] + ozone_platforms
-  }
-
-  # GYP version: ui/ozone/ozone.gyp:generate_constructor_list
-  action("generate_constructor_list") {
-    script = "//ui/ozone/generate_constructor_list.py"
-
-    inputs = [
-      platform_list_txt_file,
-    ]
-    outputs = [
-      constructor_list_cc_file,
-    ]
-
-    args = [
-      "--platform_list=" + rebase_path(platform_list_txt_file, root_build_dir),
-      "--output_cc=" + rebase_path(constructor_list_cc_file, root_build_dir),
-      "--namespace=views",
-      "--typename=DesktopFactoryOzone",
-      "--include=\"ui/views/widget/desktop_aura/desktop_factory_ozone.h\"",
-    ]
-
-    deps = [
-      ":generate_ozone_platform_list",
-    ]
-  }
-}
 static_library("test_support_internal") {
   testonly = true
   sources = [

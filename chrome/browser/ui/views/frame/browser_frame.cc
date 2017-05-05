@@ -222,6 +222,7 @@ void BrowserFrame::OnNativeWidgetActivationChanged(bool active) {
 
 void BrowserFrame::OnNativeWidgetWorkspaceChanged() {
   chrome::SaveWindowWorkspace(browser_view_->browser(), GetWorkspace());
+// Added defined(USE_X11) for compiling chrome browser with ozone-wayland port
 #if !defined(OS_CHROMEOS) && defined(USE_X11)
   BrowserList::MoveBrowsersInWorkspaceToFront(
       views::X11DesktopHandler::get()->GetWorkspace());

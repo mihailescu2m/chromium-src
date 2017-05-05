@@ -9,7 +9,7 @@
 #include "components/pref_registry/pref_registry_syncable.h"
 #include "components/prefs/pref_registry_simple.h"
 #include "components/prefs/pref_service.h"
-
+// Added defined(USE_X11) for compiling chrome browser with ozone-wayland port
 #if defined(OS_LINUX) && !defined(OS_CHROMEOS) && defined(USE_X11)
 #include "ui/base/x/x11_util.h"  // nogncheck
 #endif
