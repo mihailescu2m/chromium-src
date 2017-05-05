@@ -43,6 +43,7 @@ NativeViewAccessibilityBase::NativeViewAccessibilityBase(View* view)
     : view_(view),
       parent_widget_(nullptr),
       ax_node_(nullptr) {
+// Disabled for ozone-wayland port
 #if !defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
   ax_node_ = ui::AXPlatformNode::Create(this);
 #endif

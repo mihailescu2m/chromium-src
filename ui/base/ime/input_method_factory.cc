@@ -16,6 +16,7 @@
 #include "ui/base/ime/input_method_win.h"
 #elif defined(OS_MACOSX)
 #include "ui/base/ime/input_method_mac.h"
+// Removed defined(USE_X11) for ozone-wayland port
 #elif defined(USE_AURA) && defined(OS_LINUX)
 #include "ui/base/ime/input_method_auralinux.h"
 #elif defined(OS_ANDROID)
@@ -60,6 +61,7 @@ std::unique_ptr<InputMethod> CreateInputMethod(
   return base::MakeUnique<InputMethodWin>(delegate, widget);
 #elif defined(OS_MACOSX)
   return base::MakeUnique<InputMethodMac>(delegate);
+// Removed defined(USE_X11) for ozone-wayland port
 #elif defined(USE_AURA) && defined(OS_LINUX)
   return base::MakeUnique<InputMethodAuraLinux>(delegate);
 #elif defined(OS_ANDROID)

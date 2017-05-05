@@ -4017,7 +4017,8 @@ split_static_library("browser") {
       "password_manager/password_store_signin_notifier_impl.h",
     ]
   }
-  if (ozone_platform_wayland_external) {
+  # Added for ozone-wayland port
+  if (use_ozone && ozone_platform_wayland_external) {
     sources -= [
       "fullscreen_ozone.cc",
     ]

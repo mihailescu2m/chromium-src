@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_ROOT_WINDOW_HOST_OZONE_H_
-#define CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_ROOT_WINDOW_HOST_OZONE_H_
+#ifndef CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_WINDOW_TREE_HOST_OZONE_WAYLAND_EXTERNAL_H_
+#define CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_WINDOW_TREE_HOST_OZONE_WAYLAND_EXTERNAL_H_
 
-#include "ozone/ui/desktop_aura/desktop_window_tree_host_external_ozone.h"
 #include "chrome/browser/ui/views/frame/browser_desktop_window_tree_host.h"
+#include "ozone/ui/desktop_aura/desktop_window_tree_host_ozone_wayland.h"
 
 class BrowserFrame;
 class BrowserView;
@@ -40,4 +40,4 @@ class BrowserDesktopWindowTreeHostOzone
   DISALLOW_COPY_AND_ASSIGN(BrowserDesktopWindowTreeHostOzone);
 };
 
-#endif  // CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_ROOT_WINDOW_HOST_OZONE_H_
+#endif  // CHROME_BROWSER_UI_VIEWS_FRAME_BROWSER_DESKTOP_WINDOW_TREE_HOST_OZONE_WAYLAND_EXTERNAL_H_

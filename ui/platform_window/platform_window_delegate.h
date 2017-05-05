@@ -7,7 +7,10 @@
 
 #include "ui/gfx/native_widget_types.h"
 
-#include <vector>
+// Added for external ozone wayland port
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+#include "ui/platform_window/wayland_external/wayland_platform_window_delegate.h"
+#endif
 
 namespace gfx {
 class Rect;
@@ -25,7 +28,12 @@ enum PlatformWindowState {
   PLATFORM_WINDOW_STATE_FULLSCREEN,
 };
 
+// Added for external ozone wayland port
+#if defined(USE_OZONE) && defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
+class PlatformWindowDelegate : public WaylandPlatformWindowDelegate {
+#else
 class PlatformWindowDelegate {
+#endif
  public:
   virtual ~PlatformWindowDelegate() {}
 
@@ -53,22 +61,6 @@ class PlatformWindowDelegate {
   virtual void OnAcceleratedWidgetDestroyed() = 0;
 
   virtual void OnActivationChanged(bool active) = 0;
-
-  virtual void OnDragEnter(unsigned windowhandle,
-                           float x,
-                           float y,
-                           const std::vector<std::string>& mime_types,
-                           uint32_t serial) { }
-
-  virtual void OnDragDataReceived(int fd) { }
-
-  virtual void OnDragLeave() { }
-
-  virtual void OnDragMotion(float x,
-                            float y,
-                            uint32_t time) { }
-
-  virtual void OnDragDrop() { }
 };
 
 }  // namespace ui

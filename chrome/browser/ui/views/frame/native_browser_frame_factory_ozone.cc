@@ -7,6 +7,7 @@
 #include "chrome/browser/ui/views/frame/browser_frame_mus.h"
 #include "ui/aura/env.h"
 
+// Added for ozone wayland external port
 #if defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
 #include "chrome/browser/ui/views/frame/desktop_browser_frame_aura.h"
 #endif
@@ -17,6 +18,9 @@ NativeBrowserFrame* NativeBrowserFrameFactory::Create(
   if (aura::Env::GetInstance()->mode() == aura::Env::Mode::MUS)
     return new BrowserFrameMus(browser_frame, browser_view);
 
+// Added for ozone wayland external port
+// For chrome browser with ozone wayland port
+// we should create DesktopBrowserFrameAura.
 #if defined(OZONE_PLATFORM_WAYLAND_EXTERNAL)
   return new DesktopBrowserFrameAura(browser_frame, browser_view);
 #endif
