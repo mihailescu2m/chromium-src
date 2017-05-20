@@ -52,7 +52,7 @@ class WaylandSeat;
 class WaylandShell;
 class WaylandWindow;
 
-typedef std::map<unsigned, WaylandWindow*> WindowMap;
+typedef std::map<unsigned, std::unique_ptr<WaylandWindow>> WindowMap;
 
 // WaylandDisplay is a wrapper around wl_display. Once we get a valid
 // wl_display, the Wayland server will send different events to register
