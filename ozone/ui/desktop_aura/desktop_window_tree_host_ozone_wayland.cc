@@ -139,6 +139,8 @@ void DesktopWindowTreeHostOzone::Init(
     sanitized_params.bounds.set_height(100);
 
   InitOzoneWindow(sanitized_params);
+  InitHost();
+  window()->Show();
 }
 
 void DesktopWindowTreeHostOzone::OnNativeWidgetCreated(
@@ -159,6 +161,14 @@ void DesktopWindowTreeHostOzone::OnNativeWidgetCreated(
     delete aura_windows_;
     aura_windows_ = NULL;
   }
+}
+
+void DesktopWindowTreeHostOzone::OnWidgetInitDone() {
+  NOTIMPLEMENTED();
+}
+
+void DesktopWindowTreeHostOzone::OnNativeWidgetActivationChanged(bool active) {
+  NOTIMPLEMENTED();
 }
 
 std::unique_ptr<corewm::Tooltip>
@@ -312,7 +322,7 @@ void DesktopWindowTreeHostOzone::CenterWindow(const gfx::Size& size) {
   // able to close or move it.
   window_bounds_in_pixels.AdjustToFit(parent_bounds_in_pixels);
 
-  SetBounds(window_bounds_in_pixels);
+  SetBoundsInPixels(window_bounds_in_pixels);
 }
 
 void DesktopWindowTreeHostOzone::GetWindowPlacement(
@@ -514,6 +524,11 @@ void DesktopWindowTreeHostOzone::SetVisibilityChangedAnimationsEnabled(
   // Much like the previous NativeWidgetGtk, we don't have anything to do here.
 }
 
+NonClientFrameView* DesktopWindowTreeHostOzone::CreateNonClientFrameView() {
+  NOTIMPLEMENTED();
+  return NULL;
+}
+
 bool DesktopWindowTreeHostOzone::ShouldUseNativeFrame() const {
   return false;
 }
@@ -597,9 +612,6 @@ void DesktopWindowTreeHostOzone::FlashFrame(bool flash_frame) {
   NOTIMPLEMENTED();
 }
 
-void DesktopWindowTreeHostOzone::OnRootViewLayout() {
-}
-
 bool DesktopWindowTreeHostOzone::IsAnimatingClosed() const {
   return false;
 }
@@ -611,6 +623,15 @@ bool DesktopWindowTreeHostOzone::IsTranslucentWindowOpacitySupported() const {
 void DesktopWindowTreeHostOzone::SizeConstraintsChanged() {
 }
 
+bool DesktopWindowTreeHostOzone::ShouldUpdateWindowTransparency() const {
+  //TODO: the value can be changed relate to platform requirements
+  return false;
+}
+
+bool DesktopWindowTreeHostOzone::ShouldUseDesktopNativeCursorManager() const {
+  //TODO: the value can be changed relate to platform requirements
+  return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // DesktopWindowTreeHostOzone, aura::WindowTreeHost implementation:
@@ -651,19 +672,15 @@ void DesktopWindowTreeHostOzone::HideImpl() {
   native_widget_delegate_->OnNativeWidgetVisibilityChanged(false);
 }
 
-gfx::Rect DesktopWindowTreeHostOzone::GetBounds() const {
+gfx::Rect DesktopWindowTreeHostOzone::GetBoundsInPixels() const {
   return platform_window_->GetBounds();
 }
 
-void DesktopWindowTreeHostOzone::SetBounds(
-    const gfx::Rect& requested_bounds) {
-  gfx::Rect bounds(requested_bounds.origin(),
-                   AdjustSize(requested_bounds.size()));
+void DesktopWindowTreeHostOzone::SetBoundsInPixels(
+    const gfx::Rect& bounds_in_pixels) {
+  gfx::Rect bounds(bounds_in_pixels.origin(),
+                   AdjustSize(bounds_in_pixels.size()));
   platform_window_->SetBounds(bounds);
-}
-
-gfx::Point DesktopWindowTreeHostOzone::GetLocationOnNativeScreen() const {
-  return platform_window_->GetBounds().origin();
 }
 
 void DesktopWindowTreeHostOzone::SetCapture() {
@@ -694,11 +711,15 @@ void DesktopWindowTreeHostOzone::ShowWindow() {
   ShowWindowWithState(show_state);
 }
 
+gfx::Point DesktopWindowTreeHostOzone::GetLocationOnScreenInPixels() const {
+  return GetBoundsInPixels().origin();
+}
+
 void DesktopWindowTreeHostOzone::SetCursorNative(gfx::NativeCursor cursor) {
   platform_window_->SetCursor(cursor.platform());
 }
 
-void DesktopWindowTreeHostOzone::MoveCursorToNative(
+void DesktopWindowTreeHostOzone::MoveCursorToScreenLocationInPixels(
     const gfx::Point& location) {
   platform_window_->MoveCursorTo(location);
 }
@@ -714,7 +735,7 @@ void DesktopWindowTreeHostOzone::OnBoundsChanged(
     const gfx::Rect& new_bounds) {
   // TODO(kalyan): Add support to check if origin has really changed.
   native_widget_delegate_->AsWidget()->OnNativeWidgetMove();
-  OnHostResized(new_bounds.size());
+  OnHostResizedInPixels(new_bounds.size());
   ResetWindowRegion();
 }
 
@@ -1028,19 +1049,6 @@ void DesktopWindowTreeHostOzone::ResetWindowRegion() {
   }
 
   platform_window_->SetWindowShape(window_mask);
-}
-
-// static
-VIEWS_EXPORT ui::NativeTheme*
-DesktopWindowTreeHost::GetNativeTheme(aura::Window* window) {
-  const views::LinuxUI* linux_ui = views::LinuxUI::instance();
-  if (linux_ui) {
-    ui::NativeTheme* native_theme = linux_ui->GetNativeTheme(window);
-    if (native_theme)
-      return native_theme;
-  }
-
-  return ui::NativeTheme::GetInstanceForWeb();
 }
 
 }  // namespace views
