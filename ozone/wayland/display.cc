@@ -131,10 +131,6 @@ void WaylandDisplay::FlushDisplay() {
 }
 
 void WaylandDisplay::DestroyWindow(unsigned w) {
-  std::map<unsigned, WaylandWindow*>::const_iterator it = widget_map_.find(w);
-  WaylandWindow* widget = it == widget_map_.end() ? NULL : it->second;
-  DCHECK(widget);
-  delete widget;
   widget_map_.erase(w);
   if (widget_map_.empty())
     StopProcessingEvents();
@@ -269,7 +265,7 @@ void WaylandDisplay::InitializeDisplay() {
 
 WaylandWindow* WaylandDisplay::CreateAcceleratedSurface(unsigned w) {
   WaylandWindow* window = new WaylandWindow(w);
-  widget_map_[w] = window;
+  widget_map_[w].reset(window);
 
   return window;
 }
@@ -295,7 +291,6 @@ void WaylandDisplay::StopProcessingEvents() {
 void WaylandDisplay::Terminate() {
   loop_ = NULL;
   if (!widget_map_.empty()) {
-    base::STLDeleteValues(&widget_map_);
     widget_map_.clear();
   }
 
@@ -352,8 +347,8 @@ void WaylandDisplay::Terminate() {
 }
 
 WaylandWindow* WaylandDisplay::GetWidget(unsigned w) const {
-  std::map<unsigned, WaylandWindow*>::const_iterator it = widget_map_.find(w);
-  return it == widget_map_.end() ? NULL : it->second;
+  WindowMap::const_iterator it = widget_map_.find(w);
+  return it == widget_map_.end() ? NULL : it->second.get();
 }
 
 void WaylandDisplay::SetWidgetState(unsigned w, ui::WidgetState state) {
