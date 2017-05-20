@@ -71,8 +71,10 @@ ChromeBrowserMainExtraPartsViewsLinux::ChromeBrowserMainExtraPartsViewsLinux() {
 
 ChromeBrowserMainExtraPartsViewsLinux::
     ~ChromeBrowserMainExtraPartsViewsLinux() {
+#if defined(USE_X11)
   if (views::X11DesktopHandler::get_dont_create())
     views::X11DesktopHandler::get_dont_create()->RemoveObserver(this);
+#endif
 }
 
 void ChromeBrowserMainExtraPartsViewsLinux::PreEarlyInitialization() {
