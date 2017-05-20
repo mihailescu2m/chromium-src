@@ -69,7 +69,7 @@ int DesktopScreenWayland::GetNumDisplays() const {
   return displays_.size();
 }
 
-std::vector<display::Display> DesktopScreenWayland::GetAllDisplays() const {
+const std::vector<display::Display>& DesktopScreenWayland::GetAllDisplays() const {
   return displays_;
 }
 

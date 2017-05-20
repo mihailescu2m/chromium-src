@@ -370,7 +370,7 @@ void DesktopDragDropClientWayland::OnDragDrop() {
     // transferred from the source process. If so, we must delay the emission
     // of the drop event until the data is available.
     delayed_drop_location_.reset(new gfx::Point(point_.x(), point_.y()));
-    root_window_.GetHost()->ConvertPointFromNativeScreen(
+    root_window_.GetHost()->ConvertScreenInPixelsToDIP(
         delayed_drop_location_.get());
   }
 }
@@ -418,7 +418,7 @@ void DesktopDragDropClientWayland::OnDragDataCollected(
   }
 
   gfx::Point root_location(point_.x(), point_.y());
-  root_window_.GetHost()->ConvertPointFromNativeScreen(&root_location);
+  root_window_.GetHost()->ConvertScreenInPixelsToDIP(&root_location);
 
   target_window_ = root_window_.GetEventHandlerForPoint(root_location);
   if (!target_window_)
@@ -465,7 +465,7 @@ DesktopDragDropClientWayland::CreateDropTargetEvent(
   int drag_operations = ui::DragDropTypes::DRAG_COPY;
 
   gfx::Point target_location = root_location;
-  target_window_->GetHost()->ConvertPointToHost(&target_location);
+  target_window_->GetHost()->ConvertDIPToScreenInPixels(&target_location);
   aura::Window::ConvertPointToTarget(&root_window_,
                                      target_window_,
                                      &target_location);
@@ -480,7 +480,7 @@ DesktopDragDropClientWayland::CreateDropTargetEvent(
 std::unique_ptr<ui::DropTargetEvent>
 DesktopDragDropClientWayland::CreateDropTargetEvent() const {
   gfx::Point root_location(point_.x(), point_.y());
-  root_window_.GetHost()->ConvertPointFromNativeScreen(&root_location);
+  root_window_.GetHost()->ConvertScreenInPixelsToDIP(&root_location);
 
   return CreateDropTargetEvent(root_location);
 }
