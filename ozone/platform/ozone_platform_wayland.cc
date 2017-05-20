@@ -84,7 +84,7 @@ class OzonePlatformWayland : public OzonePlatform {
                                               window_manager_.get()));
   }
 
-  std::unique_ptr<NativeDisplayDelegate> CreateNativeDisplayDelegate() override {
+  std::unique_ptr<display::NativeDisplayDelegate> CreateNativeDisplayDelegate() override {
     return nullptr;
   }
 
