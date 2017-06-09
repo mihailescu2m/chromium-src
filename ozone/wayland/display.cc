@@ -39,6 +39,7 @@
 #include "ozone/wayland/shell/shell.h"
 #include "ozone/wayland/window.h"
 #include "ui/ozone/common/egl_util.h"
+#include "ui/ozone/common/gl_ozone_egl.h"
 #include "ui/ozone/public/native_pixmap.h"
 #include "ui/ozone/public/surface_ozone_canvas.h"
 
@@ -78,6 +79,54 @@ static const struct wl_drm_listener drm_listener = {
 #endif
 
 namespace ozonewayland {
+
+class GLOzoneEGLWayland : public ui::GLOzoneEGL {
+ public:
+  GLOzoneEGLWayland(WaylandDisplay* display) : display_(display) {}
+  ~GLOzoneEGLWayland() override {}
+
+  scoped_refptr<gl::GLSurface> CreateViewGLSurface(
+      gfx::AcceleratedWidget widget) override;
+
+  scoped_refptr<gl::GLSurface> CreateOffscreenGLSurface(
+      const gfx::Size& size) override;
+
+ protected:
+  intptr_t GetNativeDisplay() override;
+  bool LoadGLES2Bindings() override;
+
+ private:
+  WaylandDisplay* display_;
+
+  DISALLOW_COPY_AND_ASSIGN(GLOzoneEGLWayland);
+};
+
+scoped_refptr<gl::GLSurface> GLOzoneEGLWayland::CreateViewGLSurface(
+    gfx::AcceleratedWidget widget) {
+  return gl::InitializeGLSurface(new GLSurfaceWayland(widget));
+}
+
+scoped_refptr<gl::GLSurface> GLOzoneEGLWayland::CreateOffscreenGLSurface(
+    const gfx::Size& size) {
+  if (gl::GLSurfaceEGL::IsEGLSurfacelessContextSupported() &&
+      size.width() == 0 && size.height() == 0) {
+    return gl::InitializeGLSurface(new gl::SurfacelessEGL(size));
+  } else {
+    return gl::InitializeGLSurface(new gl::PbufferGLSurfaceEGL(size));
+  }
+}
+
+intptr_t GLOzoneEGLWayland::GetNativeDisplay() {
+  return reinterpret_cast<intptr_t>(display_->display());
+}
+
+bool GLOzoneEGLWayland::LoadGLES2Bindings() {
+  if (!display_->display())
+    return false;
+  setenv("EGL_PLATFORM", "wayland", 0);
+  return ui::LoadDefaultEGLGLES2Bindings();
+}
+
 WaylandDisplay* WaylandDisplay::instance_ = NULL;
 
 WaylandDisplay::WaylandDisplay() : SurfaceFactoryOzone(),
@@ -107,6 +156,7 @@ WaylandDisplay::WaylandDisplay() : SurfaceFactoryOzone(),
     m_fd_(-1),
     m_capabilities_(0),
 #endif
+    egl_implementation_(new GLOzoneEGLWayland(this)),
     weak_ptr_factory_(this) {
 }
 
@@ -165,37 +215,6 @@ bool WaylandDisplay::InitializeHardware() {
   return true;
 }
 
-intptr_t WaylandDisplay::GetNativeDisplay() {
-  return (intptr_t)display_;
-}
-
-scoped_refptr<gl::GLSurface> WaylandDisplay::CreateViewGLSurface(
-    gl::GLImplementation implementation,
-    gfx::AcceleratedWidget widget) {
-  if (implementation != gl::kGLImplementationEGLGLES2) {
-    NOTREACHED();
-    return nullptr;
-  }
-
-  return gl::InitializeGLSurface(new GLSurfaceWayland(widget));
-}
-
-scoped_refptr<gl::GLSurface> WaylandDisplay::CreateOffscreenGLSurface(
-    gl::GLImplementation implementation,
-    const gfx::Size& size) {
-  if (implementation != gl::kGLImplementationEGLGLES2) {
-    NOTREACHED();
-    return nullptr;
-  }
-
-  if (gl::GLSurfaceEGL::IsEGLSurfacelessContextSupported() &&
-      size.width() == 0 && size.height() == 0) {
-    return gl::InitializeGLSurface(new gl::SurfacelessEGL(size));
-  } else {
-    return gl::InitializeGLSurface(new gl::PbufferGLSurfaceEGL(size));
-  }
-}
-
 scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
     gfx::AcceleratedWidget widget,
     gfx::Size size,
@@ -215,11 +234,13 @@ scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
 #endif
 }
 
-bool WaylandDisplay::LoadEGLGLES2Bindings() {
-  if (!display_)
-    return false;
-  setenv("EGL_PLATFORM", "wayland", 0);
-  return ui::LoadDefaultEGLGLES2Bindings();
+scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmapFromHandle(
+    gfx::AcceleratedWidget widget,
+    gfx::Size size,
+    gfx::BufferFormat format,
+    const gfx::NativePixmapHandle& handle) {
+  NOTIMPLEMENTED();
+  return nullptr;
 }
 
 std::unique_ptr<ui::SurfaceOzoneCanvas> WaylandDisplay::CreateCanvasForWidget(
@@ -238,6 +259,23 @@ std::unique_ptr<ui::SurfaceOzoneCanvas> WaylandDisplay::CreateCanvasForWidget(
 
   // This code will obviously never be reached, but it placates -Wreturn-type.
   return std::unique_ptr<ui::SurfaceOzoneCanvas>();
+}
+
+std::vector<gl::GLImplementation>
+WaylandDisplay::GetAllowedGLImplementations() {
+  std::vector<gl::GLImplementation> impls;
+  impls.push_back(gl::kGLImplementationEGLGLES2);
+  return impls;
+}
+
+ui::GLOzone* WaylandDisplay::GetGLOzone(
+    gl::GLImplementation implementation) {
+  switch (implementation) {
+    case gl::kGLImplementationEGLGLES2:
+      return egl_implementation_.get();
+    default:
+      return nullptr;
+  }
 }
 
 void WaylandDisplay::InitializeDisplay() {
