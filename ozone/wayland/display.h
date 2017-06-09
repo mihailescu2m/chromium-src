@@ -29,6 +29,7 @@
 #include "ozone/platform/window_constants.h"
 #include "ozone/wayland/egl/gl_surface_wayland.h"
 #include "ui/events/event_constants.h"
+#include "ui/gl/gl_surface.h"
 #include "ui/ozone/public/gpu_platform_support.h"
 #include "ui/ozone/public/surface_factory_ozone.h"
 
@@ -106,25 +107,21 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
 
   bool InitializeHardware();
 
-  // Ozone Display implementation:
-  intptr_t GetNativeDisplay() override;
-
-  // Ownership is passed to the caller.
-  scoped_refptr<gl::GLSurface> CreateViewGLSurface(
-      gl::GLImplementation implementation,
-      gfx::AcceleratedWidget widget) override;
-  scoped_refptr<gl::GLSurface> CreateOffscreenGLSurface(
-      gl::GLImplementation implementation,
-      const gfx::Size& size) override;
-
-  bool LoadEGLGLES2Bindings() override;
-
-  scoped_refptr<ui::NativePixmap> CreateNativePixmap(
-      gfx::AcceleratedWidget widget, gfx::Size size, gfx::BufferFormat format,
-          gfx::BufferUsage usage) override;
-
+  // SurfaceFactoryOzone:
+  std::vector<gl::GLImplementation> GetAllowedGLImplementations() override;
+  ui::GLOzone* GetGLOzone(gl::GLImplementation implementation) override;
   std::unique_ptr<ui::SurfaceOzoneCanvas> CreateCanvasForWidget(
       gfx::AcceleratedWidget widget) override;
+  scoped_refptr<ui::NativePixmap> CreateNativePixmap(
+      gfx::AcceleratedWidget widget,
+      gfx::Size size,
+      gfx::BufferFormat format,
+      gfx::BufferUsage usage) override;
+  scoped_refptr<ui::NativePixmap> CreateNativePixmapFromHandle(
+      gfx::AcceleratedWidget widget,
+      gfx::Size size,
+      gfx::BufferFormat format,
+      const gfx::NativePixmapHandle& handle) override;
 
   void MotionNotify(float x, float y);
   void ButtonNotify(unsigned handle,
@@ -266,6 +263,7 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   int m_fd_;
   uint32_t m_capabilities_;
 #endif
+  std::unique_ptr<ui::GLOzone> egl_implementation_;
   static WaylandDisplay* instance_;
   // Support weak pointers for attach & detach callbacks.
   base::WeakPtrFactory<WaylandDisplay> weak_ptr_factory_;
