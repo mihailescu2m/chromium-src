@@ -11,7 +11,7 @@
 #include "ozone/ui/desktop_aura/desktop_drag_drop_client_wayland.h"
 #include "ozone/ui/desktop_aura/desktop_screen_wayland.h"
 #include "ui/aura/client/focus_client.h"
-#include "ui/aura/window_property.h"
+#include "ui/base/class_property.h"
 #include "ui/base/hit_test.h"
 #include "ui/base/ime/input_method.h"
 #include "ui/events/platform/platform_event_source.h"
@@ -30,7 +30,7 @@
 #include "ui/wm/core/window_util.h"
 #include "ui/wm/public/window_move_client.h"
 
-DECLARE_WINDOW_PROPERTY_TYPE(views::DesktopWindowTreeHostOzone*);
+DECLARE_UI_CLASS_PROPERTY_TYPE(views::DesktopWindowTreeHostOzone*);
 
 namespace views {
 
@@ -40,10 +40,10 @@ DesktopWindowTreeHostOzone::open_windows_ = NULL;
 std::vector<aura::Window*>*
 DesktopWindowTreeHostOzone::aura_windows_ = NULL;
 
-DEFINE_WINDOW_PROPERTY_KEY(
+DEFINE_UI_CLASS_PROPERTY_KEY(
     aura::Window*, kViewsWindowForRootWindow, NULL);
 
-DEFINE_WINDOW_PROPERTY_KEY(
+DEFINE_UI_CLASS_PROPERTY_KEY(
     DesktopWindowTreeHostOzone*, kHostForRootWindow, NULL);
 
 DesktopWindowTreeHostOzone::DesktopWindowTreeHostOzone(
@@ -1049,6 +1049,10 @@ void DesktopWindowTreeHostOzone::ResetWindowRegion() {
   }
 
   platform_window_->SetWindowShape(window_mask);
+}
+
+bool DesktopWindowTreeHostOzone::ShouldCreateVisibilityController() const {
+  return true;
 }
 
 }  // namespace views
