@@ -162,6 +162,8 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   void OnDragMotion(float x, float y, uint32_t time) override;
   void OnDragDrop() override;
 
+  bool ShouldCreateVisibilityController() const override;
+
  private:
   enum {
     Uninitialized = 0x00,
