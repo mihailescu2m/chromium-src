@@ -450,7 +450,7 @@ void WindowManagerWayland::InitializeXKB(base::SharedMemoryHandle fd,
     return;
 
   KeyboardLayoutEngineManager::GetKeyboardLayoutEngine()->
-      SetCurrentLayoutByName(map_str);
+      SetCurrentLayoutFromBuffer(map_str, strlen(map_str));
   munmap(map_str, size);
   close(fd.fd);
 }
