@@ -556,7 +556,10 @@ void WindowManagerWayland::NotifyTouchEvent(EventType type,
                                             uint32_t time_stamp) {
   gfx::Point position(x, y);
   base::TimeTicks timestamp = ui::EventTimeForNow() + base::TimeDelta::FromMilliseconds(time_stamp);
-  TouchEvent touchev(type, position, touch_id, timestamp);
+  TouchEvent touchev(type,
+                     position,
+                     timestamp,
+                     ui::PointerDetails(ui::EventPointerType::POINTER_TYPE_TOUCH, touch_id));
   DispatchEvent(&touchev);
 }
 
