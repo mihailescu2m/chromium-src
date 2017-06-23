@@ -180,6 +180,8 @@ void OzoneWaylandWindow::Close() {
     window_manager_->OnRootWindowClosed(this);
 }
 
+void OzoneWaylandWindow::PrepareForShutdown() {}
+
 void OzoneWaylandWindow::SetCapture() {
   window_manager_->GrabEvents(handle_);
 }

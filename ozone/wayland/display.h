@@ -112,12 +112,12 @@ class WaylandDisplay : public ui::SurfaceFactoryOzone,
   ui::GLOzone* GetGLOzone(gl::GLImplementation implementation) override;
   std::unique_ptr<ui::SurfaceOzoneCanvas> CreateCanvasForWidget(
       gfx::AcceleratedWidget widget) override;
-  scoped_refptr<ui::NativePixmap> CreateNativePixmap(
+  scoped_refptr<gfx::NativePixmap> CreateNativePixmap(
       gfx::AcceleratedWidget widget,
       gfx::Size size,
       gfx::BufferFormat format,
       gfx::BufferUsage usage) override;
-  scoped_refptr<ui::NativePixmap> CreateNativePixmapFromHandle(
+  scoped_refptr<gfx::NativePixmap> CreateNativePixmapFromHandle(
       gfx::AcceleratedWidget widget,
       gfx::Size size,
       gfx::BufferFormat format,
