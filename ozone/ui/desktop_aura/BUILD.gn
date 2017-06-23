@@ -46,6 +46,7 @@ action("generate_desktop_factory_ozone_list") {
     "--output_cc=" + rebase_path(desktop_factory_ozone_list_cc_file, root_build_dir),
     "--namespace=views",
     "--typename=DesktopFactoryOzone",
+    "--using=views::DesktopFactoryOzone",
     "--include=\"ui/views/widget/desktop_aura/desktop_factory_ozone.h\"",
   ]
 

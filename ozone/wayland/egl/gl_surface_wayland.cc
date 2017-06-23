@@ -17,7 +17,8 @@ namespace ozonewayland {
 GLSurfaceWayland::GLSurfaceWayland(unsigned widget)
     : NativeViewGLSurfaceEGL(
           reinterpret_cast<EGLNativeWindowType>(
-          WaylandDisplay::GetInstance()->GetEglWindow(widget))),
+          WaylandDisplay::GetInstance()->GetEglWindow(widget)),
+          nullptr),
       widget_(widget) {
 }
 
