@@ -38,9 +38,9 @@
 #include "ozone/wayland/seat.h"
 #include "ozone/wayland/shell/shell.h"
 #include "ozone/wayland/window.h"
+#include "ui/gfx/native_pixmap.h"
 #include "ui/ozone/common/egl_util.h"
 #include "ui/ozone/common/gl_ozone_egl.h"
-#include "ui/ozone/public/native_pixmap.h"
 #include "ui/ozone/public/surface_ozone_canvas.h"
 
 #if defined(ENABLE_DRM_SUPPORT)
@@ -215,7 +215,7 @@ bool WaylandDisplay::InitializeHardware() {
   return true;
 }
 
-scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
+scoped_refptr<gfx::NativePixmap> WaylandDisplay::CreateNativePixmap(
     gfx::AcceleratedWidget widget,
     gfx::Size size,
     gfx::BufferFormat format,
@@ -234,7 +234,7 @@ scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmap(
 #endif
 }
 
-scoped_refptr<ui::NativePixmap> WaylandDisplay::CreateNativePixmapFromHandle(
+scoped_refptr<gfx::NativePixmap> WaylandDisplay::CreateNativePixmapFromHandle(
     gfx::AcceleratedWidget widget,
     gfx::Size size,
     gfx::BufferFormat format,
