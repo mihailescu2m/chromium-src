@@ -228,6 +228,17 @@ bool GpuChildThread::Send(IPC::Message* msg) {
   return ChildThreadImpl::Send(msg);
 }
 
+// Recovered for ozone-wayland port.
+bool GpuChildThread::OnControlMessageReceived(const IPC::Message& msg) {
+#if defined(USE_OZONE)
+  if (ui::OzonePlatform::GetInstance()
+          ->GetGpuPlatformSupport()
+          ->OnMessageReceived(msg))
+    return true;
+#endif
+  return false;
+}
+
 void GpuChildThread::OnAssociatedInterfaceRequest(
     const std::string& name,
     mojo::ScopedInterfaceEndpointHandle handle) {
