@@ -51,6 +51,7 @@ class OzoneWaylandWindow : public PlatformWindow,
   void Show() override;
   void Hide() override;
   void Close() override;
+  void PrepareForShutdown() override;
   void SetCapture() override;
   void ReleaseCapture() override;
   void ToggleFullscreen() override;
