@@ -898,7 +898,7 @@ void DesktopWindowTreeHostOzone::DispatchEvent(ui::Event* event) {
   if (event->handled())
     return;
 
-  SendEventToProcessor(event);
+  SendEventToSink(event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

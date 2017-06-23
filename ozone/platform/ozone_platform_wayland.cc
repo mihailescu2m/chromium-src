@@ -88,7 +88,7 @@ class OzonePlatformWayland : public OzonePlatform {
     return nullptr;
   }
 
-  void InitializeUI() override {
+  void InitializeUI(const InitParams& args) override {
     // For tests.
     if (wayland_display_.get())
       return;
@@ -104,7 +104,7 @@ class OzonePlatformWayland : public OzonePlatform {
         new ui::WindowManagerWayland(gpu_platform_host_.get()));
   }
 
-  void InitializeGPU() override {
+  void InitializeGPU(const InitParams& args) override {
     if (!wayland_display_)
       wayland_display_.reset(new ozonewayland::WaylandDisplay());
 
