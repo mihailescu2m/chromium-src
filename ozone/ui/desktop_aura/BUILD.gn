@@ -25,6 +25,7 @@ source_set("views_ozone_wayland") {
 
   deps = [
     "//skia",
+    "//ui/accessibility:ax_gen",
     ":generate_desktop_factory_ozone_list",
   ]
 
