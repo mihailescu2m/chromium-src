@@ -460,10 +460,8 @@ void WaylandDisplay::InitWindow(unsigned handle,
   DCHECK(window);
   switch (type) {
   case ui::WINDOW:
-    window->SetShellAttributes(WaylandWindow::TOPLEVEL);
-    break;
   case ui::WINDOWFRAMELESS:
-    NOTIMPLEMENTED();
+    window->SetShellAttributes(WaylandWindow::TOPLEVEL);
     break;
   case ui::POPUP:
   case ui::TOOLTIP:
