@@ -46,12 +46,6 @@ void WindowManagerWayland::OnRootWindowCreated(
 void WindowManagerWayland::OnRootWindowClosed(
     OzoneWaylandWindow* window) {
   open_windows().remove(window);
-  if (open_windows().empty()) {
-    delete open_windows_;
-    open_windows_ = NULL;
-    return;
-  }
-
   if (active_window_ == window)
      active_window_ = NULL;
 
@@ -62,6 +56,12 @@ void WindowManagerWayland::OnRootWindowClosed(
      OzoneWaylandWindow* window = GetWindow(current_capture_);
      window->GetDelegate()->OnLostCapture();
     current_capture_ = gfx::kNullAcceleratedWidget;
+  }
+
+  if (open_windows().empty()) {
+    delete open_windows_;
+    open_windows_ = NULL;
+    return;
   }
 
   // Set first top level window in the list of open windows as dispatcher.
