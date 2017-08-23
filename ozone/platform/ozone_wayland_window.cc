@@ -258,14 +258,8 @@ void OzoneWaylandWindow::OnGpuProcessLaunched() {
     DeferredSendingToGpu();
 }
 
-void OzoneWaylandWindow::OnChannelEstablished() {
-  if (sender_->IsConnected())
-    DeferredSendingToGpu();
-}
-
 void OzoneWaylandWindow::DeferredSendingToGpu() {
   sender_->Send(new WaylandDisplay_Create(handle_));
-
   if (init_window_)
     sender_->Send(new WaylandDisplay_InitWindow(handle_,
                                                 parent_,
