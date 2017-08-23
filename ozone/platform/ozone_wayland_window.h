@@ -69,7 +69,6 @@ class OzoneWaylandWindow : public PlatformWindow,
 
   // ChannelObserver:
   void OnGpuProcessLaunched() override;
-  void OnChannelEstablished() override;
   void OnChannelDestroyed() override;
 
  private:
