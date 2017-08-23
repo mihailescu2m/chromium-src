@@ -34,10 +34,10 @@ class OzoneGpuPlatformSupportHost : public GpuPlatformSupportHost,
   // GpuPlatformSupportHost:
   void OnGpuProcessLaunched(
       int host_id,
+      scoped_refptr<base::SingleThreadTaskRunner> ui_runner,
       scoped_refptr<base::SingleThreadTaskRunner> send_runner,
       const base::Callback<void(IPC::Message*)>& send_callback) override;
 
-  void OnChannelEstablished() override;
   void OnChannelDestroyed(int host_id) override;
 
   // IPC::Listener:
@@ -48,8 +48,9 @@ class OzoneGpuPlatformSupportHost : public GpuPlatformSupportHost,
 
  private:
   int host_id_ = -1;
-  bool channel_established_ = false;
+  bool gpu_process_launched_ = false;
 
+  scoped_refptr<base::SingleThreadTaskRunner> ui_runner_;
   scoped_refptr<base::SingleThreadTaskRunner> send_runner_;
   base::Callback<void(IPC::Message*)> send_callback_;
 

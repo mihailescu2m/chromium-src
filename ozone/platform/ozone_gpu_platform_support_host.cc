@@ -22,7 +22,7 @@ void OzoneGpuPlatformSupportHost::RegisterHandler(
   handlers_.push_back(handler);
 
   if (IsConnected())
-    handler->OnGpuProcessLaunched(host_id_, send_runner_, send_callback_);
+    handler->OnGpuProcessLaunched(host_id_, ui_runner_, send_runner_, send_callback_);
 }
 
 void OzoneGpuPlatformSupportHost::UnregisterHandler(
@@ -38,7 +38,7 @@ void OzoneGpuPlatformSupportHost::AddChannelObserver(
   channel_observers_.AddObserver(observer);
 
   if (IsConnected())
-    observer->OnChannelEstablished();
+    observer->OnGpuProcessLaunched();
 }
 
 void OzoneGpuPlatformSupportHost::RemoveChannelObserver(
@@ -47,41 +47,33 @@ void OzoneGpuPlatformSupportHost::RemoveChannelObserver(
 }
 
 bool OzoneGpuPlatformSupportHost::IsConnected() {
-  return host_id_ >= 0 && channel_established_;
+  return host_id_ >= 0 && gpu_process_launched_;
 }
 
 void OzoneGpuPlatformSupportHost::OnGpuProcessLaunched(
     int host_id,
+    scoped_refptr<base::SingleThreadTaskRunner> ui_runner,
     scoped_refptr<base::SingleThreadTaskRunner> send_runner,
     const base::Callback<void(IPC::Message*)>& send_callback) {
   TRACE_EVENT1("drm", "OzoneGpuPlatformSupportHost::OnGpuProcessLaunched",
                "host_id", host_id);
-
+  gpu_process_launched_ = true;
   host_id_ = host_id;
+  ui_runner_ = ui_runner;
   send_runner_ = send_runner;
   send_callback_ = send_callback;
 
   for (size_t i = 0; i < handlers_.size(); ++i)
-    handlers_[i]->OnGpuProcessLaunched(host_id, send_runner_, send_callback_);
+    handlers_[i]->OnGpuProcessLaunched(host_id, ui_runner_, send_runner_, send_callback_);
 
   for (auto& observer : channel_observers_)
     observer.OnGpuProcessLaunched();
 }
 
-void OzoneGpuPlatformSupportHost::OnChannelEstablished() {
-  TRACE_EVENT0("drm", "OzoneGpuPlatformSupportHost::OnChannelEstablished")
-  channel_established_ = true;
-  for (size_t i = 0; i < handlers_.size(); ++i)
-    handlers_[i]->OnChannelEstablished();
-
-  for (auto& observer : channel_observers_)
-    observer.OnChannelEstablished();
-}
-
 void OzoneGpuPlatformSupportHost::OnChannelDestroyed(int host_id) {
   TRACE_EVENT1("drm", "OzoneGpuPlatformSupportHost::OnChannelDestroyed",
                "host_id", host_id);
-  channel_established_ = false;
+  gpu_process_launched_ = false;
   if (host_id_ == host_id) {
     host_id_ = -1;
     send_runner_ = nullptr;
