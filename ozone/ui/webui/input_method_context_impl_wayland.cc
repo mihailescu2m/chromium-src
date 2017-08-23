@@ -52,11 +52,9 @@ void InputMethodContextImplWayland::SetCursorLocation(const gfx::Rect&) {
 // GpuPlatformSupportHost implementation:
 void InputMethodContextImplWayland::OnGpuProcessLaunched(
       int host_id,
+      scoped_refptr<base::SingleThreadTaskRunner> ui_runner,
       scoped_refptr<base::SingleThreadTaskRunner> send_runner,
       const base::Callback<void(IPC::Message*)>& send_callback) {
-}
-
-void InputMethodContextImplWayland::OnChannelEstablished() {
 }
 
 void InputMethodContextImplWayland::OnChannelDestroyed(int host_id) {
