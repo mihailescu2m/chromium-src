@@ -233,11 +233,9 @@ void WindowManagerWayland::OnWindowActivated(unsigned windowhandle) {
 // GpuPlatformSupportHost implementation:
 void WindowManagerWayland::OnGpuProcessLaunched(
     int host_id,
+    scoped_refptr<base::SingleThreadTaskRunner> ui_runner,
     scoped_refptr<base::SingleThreadTaskRunner> send_runner,
     const base::Callback<void(IPC::Message*)>& send_callback) {
-}
-
-void WindowManagerWayland::OnChannelEstablished() {
 }
 
 void WindowManagerWayland::OnChannelDestroyed(int host_id) {
@@ -444,7 +442,7 @@ void WindowManagerWayland::InitializeXKB(base::SharedMemoryHandle fd,
                                    size,
                                    PROT_READ,
                                    MAP_SHARED,
-                                   fd.fd,
+                                   fd.GetHandle(),
                                    0));
   if (map_str == MAP_FAILED)
     return;
@@ -452,7 +450,7 @@ void WindowManagerWayland::InitializeXKB(base::SharedMemoryHandle fd,
   KeyboardLayoutEngineManager::GetKeyboardLayoutEngine()->
       SetCurrentLayoutFromBuffer(map_str, strlen(map_str));
   munmap(map_str, size);
-  close(fd.fd);
+  close(fd.GetHandle());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
