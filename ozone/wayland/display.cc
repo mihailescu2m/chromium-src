@@ -182,8 +182,6 @@ void WaylandDisplay::FlushDisplay() {
 
 void WaylandDisplay::DestroyWindow(unsigned w) {
   widget_map_.erase(w);
-  if (widget_map_.empty())
-    StopProcessingEvents();
 }
 
 intptr_t WaylandDisplay::GetNativeWindow(unsigned window_handle) {
