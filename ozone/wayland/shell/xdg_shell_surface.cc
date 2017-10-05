@@ -78,8 +78,7 @@ void XDGShellSurface::UpdateShellSurface(WaylandWindow::ShellType type,
                                          seat->GetWLSeat(),
                                          display->GetSerial(),
                                          x,
-                                         y,
-                                         0);
+                                         y);
     static const xdg_popup_listener xdg_popup_listener = {
       XDGShellSurface::HandlePopupPopupDone
     };
@@ -153,8 +152,7 @@ void XDGShellSurface::HandleDelete(void* data,
 }
 
 void XDGShellSurface::HandlePopupPopupDone(void* data,
-                                           struct xdg_popup* xdg_popup,
-                                           uint32_t serial) {
+                                           struct xdg_popup* xdg_popup) {
   WaylandShellSurface::PopupDone();
 }
 
