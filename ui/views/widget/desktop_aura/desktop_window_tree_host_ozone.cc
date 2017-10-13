@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include "ui/aura/window_tree_host.h"
+#include "ui/views/widget/desktop_aura/desktop_factory_ozone.h"
 #include "ui/views/widget/desktop_aura/desktop_window_tree_host.h"
 
 namespace views {
@@ -9,8 +11,10 @@ namespace views {
 DesktopWindowTreeHost* DesktopWindowTreeHost::Create(
     internal::NativeWidgetDelegate* native_widget_delegate,
     DesktopNativeWidgetAura* desktop_native_widget_aura) {
-  NOTREACHED() << "Ozone builds should use DesktopWindowTreeHostMus codepath.";
-  return nullptr;
+  DesktopFactoryOzone* d_factory = DesktopFactoryOzone::GetInstance();
+
+  return d_factory->CreateWindowTreeHost(native_widget_delegate,
+                                         desktop_native_widget_aura);
 }
 
 }  // namespace views
