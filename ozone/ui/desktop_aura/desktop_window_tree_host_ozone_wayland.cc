@@ -69,7 +69,7 @@ DesktopWindowTreeHostOzone::DesktopWindowTreeHostOzone(
 
 DesktopWindowTreeHostOzone::~DesktopWindowTreeHostOzone() {
   window()->ClearProperty(kHostForRootWindow);
-  aura::client::SetWindowMoveClient(window(), NULL);
+  wm::SetWindowMoveClient(window(), NULL);
   desktop_native_widget_aura_->OnDesktopWindowTreeHostDestroyed(this);
   DestroyDispatcher();
 }
@@ -887,7 +887,8 @@ void DesktopWindowTreeHostOzone::DispatchEvent(ui::Event* event) {
     }
     case ui::ET_KEY_PRESSED:
     case ui::ET_KEY_RELEASED: {
-      GetInputMethod()->DispatchKeyEvent(static_cast<ui::KeyEvent*>(event));
+      ignore_result(GetInputMethod()->DispatchKeyEvent(
+          static_cast<ui::KeyEvent*>(event)));
       break;
     }
 

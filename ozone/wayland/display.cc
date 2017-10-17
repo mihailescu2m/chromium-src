@@ -93,7 +93,7 @@ class GLOzoneEGLWayland : public ui::GLOzoneEGL {
 
  protected:
   intptr_t GetNativeDisplay() override;
-  bool LoadGLES2Bindings() override;
+  bool LoadGLES2Bindings(gl::GLImplementation) override;
 
  private:
   WaylandDisplay* display_;
@@ -120,11 +120,11 @@ intptr_t GLOzoneEGLWayland::GetNativeDisplay() {
   return reinterpret_cast<intptr_t>(display_->display());
 }
 
-bool GLOzoneEGLWayland::LoadGLES2Bindings() {
+bool GLOzoneEGLWayland::LoadGLES2Bindings(gl::GLImplementation impl) {
   if (!display_->display())
     return false;
   setenv("EGL_PLATFORM", "wayland", 0);
-  return ui::LoadDefaultEGLGLES2Bindings();
+  return ui::LoadDefaultEGLGLES2Bindings(impl);
 }
 
 WaylandDisplay* WaylandDisplay::instance_ = NULL;
