@@ -172,6 +172,12 @@ bool OzoneWebUI::MatchEvent(const ui::Event& event,
 void OzoneWebUI::UpdateDeviceScaleFactor() {
 }
 
+void OzoneWebUI::AddDeviceScaleFactorObserver(
+    views::DeviceScaleFactorObserver* observer) {}
+
+void OzoneWebUI::RemoveDeviceScaleFactorObserver(
+    views::DeviceScaleFactorObserver* observer) {}
+
 float OzoneWebUI::GetDeviceScaleFactor() const {
   return 0.0;
 }
