@@ -381,15 +381,18 @@ gfx::Rect DesktopWindowTreeHostOzone::GetWorkAreaBoundsInScreen() const {
   return ToDIPRect(display.bounds());
 }
 
-void DesktopWindowTreeHostOzone::SetShape(std::unique_ptr<SkRegion> native_region) {
+void DesktopWindowTreeHostOzone::SetShape(std::unique_ptr<Widget::ShapeRects> native_shape) {
   custom_window_shape_ = false;
   gfx::Path window_mask;
 
-  if (native_region) {
+  if (native_shape) {
+    SkRegion native_region;
+    for (const gfx::Rect& rect : *native_shape)
+      native_region.op(gfx::RectToSkIRect(rect), SkRegion::kUnion_Op);
     gfx::Transform transform = GetRootTransform();
-    if (!transform.IsIdentity() && !native_region->isEmpty()) {
+    if (!transform.IsIdentity() && !native_region.isEmpty()) {
       SkPath path_in_dip;
-      if (native_region->getBoundaryPath(&path_in_dip)) {
+      if (native_region.getBoundaryPath(&path_in_dip)) {
         path_in_dip.transform(transform.matrix(), &window_mask);
       }
     }
