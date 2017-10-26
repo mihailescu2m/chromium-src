@@ -104,7 +104,7 @@ void XDGShellSurface::UpdateShellSurface(WaylandWindow::ShellType type,
 }
 
 void XDGShellSurface::SetWindowTitle(const base::string16& title) {
-  xdg_surface_set_title(xdg_surface_, UTF16ToUTF8(title).c_str());
+  xdg_surface_set_title(xdg_surface_, base::UTF16ToUTF8(title).c_str());
   WaylandShellSurface::FlushDisplay();
 }
 

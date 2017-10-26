@@ -18,6 +18,7 @@
 #include "ozone/platform/ozone_platform_wayland.h"
 #include "ozone/ui/webui/input_method_context_impl_wayland.h"
 #include "ozone/ui/webui/select_file_dialog_impl_webui.h"
+#include "ui/views/window/nav_button_provider.h"
 
 namespace views {
 
@@ -36,7 +37,7 @@ void OzoneWebUI::Initialize() {
 
 ui::SelectFileDialog* OzoneWebUI::CreateSelectFileDialog(
     ui::SelectFileDialog::Listener* listener,
-    ui::SelectFilePolicy* policy) const {
+    std::unique_ptr<ui::SelectFilePolicy> policy) const {
 #if defined(USE_SELECT_FILE_DIALOG_WEBUI_IMPL)
   return ui::SelectFileDialogImplWebUI::Create(listener, policy);
 #endif
@@ -184,6 +185,10 @@ float OzoneWebUI::GetDeviceScaleFactor() const {
 
 bool OzoneWebUI::GetTint(int id, color_utils::HSL* tint) const {
   return true;
+}
+
+std::unique_ptr<views::NavButtonProvider> OzoneWebUI::CreateNavButtonProvider() {
+  return nullptr;
 }
 
 }  // namespace views
