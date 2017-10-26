@@ -495,4 +495,14 @@ void DesktopDragDropClientWayland::DragDropSessionCompleted() {
   }
 }
 
+void DesktopDragDropClientWayland::AddObserver(
+    aura::client::DragDropClientObserver* observer) {
+  NOTIMPLEMENTED();
+}
+
+void DesktopDragDropClientWayland::RemoveObserver(
+    aura::client::DragDropClientObserver* observer) {
+  NOTIMPLEMENTED();
+}
+
 }  // namespace views
