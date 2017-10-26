@@ -30,10 +30,7 @@ namespace {
 // This platform is Linux with the Wayland display server.
 class OzonePlatformWayland : public OzonePlatform {
  public:
-  OzonePlatformWayland() {
-    base::AtExitManager::RegisterTask(
-        base::Bind(&base::DeletePointer<OzonePlatformWayland>, this));
-  }
+  OzonePlatformWayland() {}
 
   ~OzonePlatformWayland() override {
   }
