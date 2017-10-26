@@ -32,9 +32,13 @@ void RegisterBrowserViewLocalPrefs(PrefRegistrySimple* registry) {
 
 void RegisterBrowserViewProfilePrefs(
     user_prefs::PrefRegistrySyncable* registry) {
-#if defined(USE_X11)
+#if defined(OS_LINUX) && !defined(OS_CHROMEOS)
   registry->RegisterBooleanPref(prefs::kUseCustomChromeFrame,
+#if defined(USE_X11)
                                 ui::GetCustomFramePrefDefault());
+#else
+                                false);
+#endif
 #endif
 
   registry->RegisterIntegerPref(
