@@ -228,7 +228,7 @@ void OzoneWaylandWindow::ConfineCursorToBounds(const gfx::Rect& bounds) {
 // WindowTreeHostDelegateWayland, ui::PlatformEventDispatcher implementation:
 bool OzoneWaylandWindow::CanDispatchEvent(
     const ui::PlatformEvent& ne) {
-  return window_manager_->event_grabber() == handle_;
+  return window_manager_->event_grabber() == gfx::AcceleratedWidget(handle_);
 }
 
 uint32_t OzoneWaylandWindow::DispatchEvent(
