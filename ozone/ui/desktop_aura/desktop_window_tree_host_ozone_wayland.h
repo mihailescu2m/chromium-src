@@ -64,7 +64,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
             const views::Widget::InitParams& params) override;
   void OnNativeWidgetCreated(const views::Widget::InitParams& params) override;
   void OnWidgetInitDone() override;
-  void OnNativeWidgetActivationChanged(bool active) override;
+  void OnActiveWindowChanged(bool active) override;
   std::unique_ptr<corewm::Tooltip> CreateTooltip() override;
   std::unique_ptr<aura::client::DragDropClient> CreateDragDropClient(
       DesktopNativeCursorManager* cursor_manager) override;
