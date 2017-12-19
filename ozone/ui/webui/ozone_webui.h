@@ -103,7 +103,6 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
       WindowButtonOrderObserver* observer) override;
   void RemoveWindowButtonOrderObserver(
       WindowButtonOrderObserver* observer) override;
-  bool UnityIsRunning() override;
   NonClientMiddleClickAction GetNonClientMiddleClickAction() override;
   void NotifyWindowManagerStartupComplete() override;
   void AddDeviceScaleFactorObserver(
