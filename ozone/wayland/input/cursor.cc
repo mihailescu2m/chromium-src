@@ -89,7 +89,7 @@ bool WaylandCursor::CreateSHMBuffer(int width, int height) {
   height_ = height;
   stride = width_ * 4;
   SkImageInfo info = SkImageInfo::MakeN32Premul(width_, height_);
-  size = info.getSafeSize(stride);
+  size = info.computeByteSize(stride);
 
   if (sh_memory_->handle().GetHandle()) {
     sh_memory_->Unmap();
