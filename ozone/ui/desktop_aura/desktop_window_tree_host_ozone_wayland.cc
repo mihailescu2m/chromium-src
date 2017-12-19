@@ -167,7 +167,7 @@ void DesktopWindowTreeHostOzone::OnWidgetInitDone() {
   NOTIMPLEMENTED();
 }
 
-void DesktopWindowTreeHostOzone::OnNativeWidgetActivationChanged(bool active) {
+void DesktopWindowTreeHostOzone::OnActiveWindowChanged(bool active) {
   NOTIMPLEMENTED();
 }
 
