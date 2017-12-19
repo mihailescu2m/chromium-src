@@ -13,8 +13,8 @@
 #include "base/memory/weak_ptr.h"
 #include "ui/base/cursor/cursor.h"
 #include "ui/events/event.h"
+#include "ui/events/event_modifiers.h"
 #include "ui/events/event_source.h"
-#include "ui/events/ozone/evdev/event_modifiers_evdev.h"
 #include "ui/events/ozone/evdev/keyboard_evdev.h"
 #include "ui/events/platform/platform_event_dispatcher.h"
 #include "ui/events/platform/platform_event_source.h"
@@ -175,7 +175,7 @@ class WindowManagerWayland
   gfx::AcceleratedWidget current_capture_ = gfx::kNullAcceleratedWidget;
   OzoneGpuPlatformSupportHost* proxy_;
   // Modifier key state (shift, ctrl, etc).
-  EventModifiersEvdev modifiers_;
+  EventModifiers modifiers_;
   // Keyboard state.
   KeyboardEvdev keyboard_;
   ozonewayland::OzoneWaylandScreen* platform_screen_;
