@@ -153,10 +153,6 @@ void OzoneWebUI::RemoveWindowButtonOrderObserver(
   WindowButtonOrderObserver* observer) {
 }
 
-bool OzoneWebUI::UnityIsRunning() {
-  return 0;
-}
-
 LinuxUI::NonClientMiddleClickAction
 OzoneWebUI::GetNonClientMiddleClickAction() {
   return MIDDLE_CLICK_ACTION_NONE;
