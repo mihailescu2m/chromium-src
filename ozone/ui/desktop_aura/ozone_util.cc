@@ -18,7 +18,7 @@ VIEWS_EXPORT bool GetCustomFramePrefDefault() {
 
 }  // namespace ui
 
-VIEWS_EXPORT bool IsFullScreenMode(int64_t display_id) {
+VIEWS_EXPORT bool IsFullScreenMode() {
   std::vector<aura::Window*> all_windows =
       views::DesktopWindowTreeHostOzone::GetAllOpenWindows();
   // Only the topmost window is checked. This works fine in the most cases, but
