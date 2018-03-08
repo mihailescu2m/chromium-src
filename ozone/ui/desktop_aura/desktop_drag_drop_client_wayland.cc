@@ -153,7 +153,7 @@ void DesktopDragDropClientWayland::DragDataCollector::ReadDragData(
     scoped_refptr<DragDataCollector> data_collector) {
   VLOG(1) <<  __FUNCTION__ << " data_collector=" << data_collector.get();
 
-  base::ThreadRestrictions::AssertIOAllowed();
+  base::AssertBlockingAllowed();
 
   ssize_t bytes_read;
   std::string data;
