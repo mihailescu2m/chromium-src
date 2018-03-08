@@ -18,7 +18,6 @@
 #include "ozone/platform/ozone_platform_wayland.h"
 #include "ozone/ui/webui/input_method_context_impl_wayland.h"
 #include "ozone/ui/webui/select_file_dialog_impl_webui.h"
-#include "ui/views/window/nav_button_provider.h"
 
 namespace views {
 
@@ -183,8 +182,8 @@ bool OzoneWebUI::GetTint(int id, color_utils::HSL* tint) const {
   return true;
 }
 
-std::unique_ptr<views::NavButtonProvider> OzoneWebUI::CreateNavButtonProvider() {
-  return nullptr;
+bool OzoneWebUI::PreferDarkTheme() const {
+  return false;
 }
 
 }  // namespace views

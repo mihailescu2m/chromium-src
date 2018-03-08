@@ -42,7 +42,6 @@ class LabelButton;
 class View;
 class DeviceScaleFactorObserver;
 class NativeThemeChangeObserver;
-class NavButtonProvider;
 class WindowButtonOrderObserver;
 // Interface to Wayland desktop features.
 //
@@ -109,7 +108,7 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
       views::DeviceScaleFactorObserver* observer) override;
   void RemoveDeviceScaleFactorObserver(
       views::DeviceScaleFactorObserver* observer) override;
-  std::unique_ptr<views::NavButtonProvider> CreateNavButtonProvider() override;
+  bool PreferDarkTheme() const override;
 
   bool MatchEvent(const ui::Event& event,
                   std::vector<TextEditCommandAuraLinux>* commands) override;
