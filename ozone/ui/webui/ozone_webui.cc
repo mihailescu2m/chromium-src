@@ -102,8 +102,8 @@ SkColor OzoneWebUI::GetInactiveSelectionFgColor() const {
   return SK_ColorBLACK;
 }
 
-double OzoneWebUI::GetCursorBlinkInterval() const {
-  return 1.0;
+base::TimeDelta OzoneWebUI::GetCursorBlinkInterval() const {
+  return base::TimeDelta::FromSeconds(1);
 }
 
 ui::NativeTheme* OzoneWebUI::GetNativeTheme(aura::Window* window) const {

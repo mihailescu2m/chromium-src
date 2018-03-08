@@ -84,7 +84,7 @@ class OZONE_WAYLAND_EXPORT OzoneWebUI : public views::LinuxUI {
   SkColor GetActiveSelectionFgColor() const override;
   SkColor GetInactiveSelectionBgColor() const override;
   SkColor GetInactiveSelectionFgColor() const override;
-  double GetCursorBlinkInterval() const override;
+  base::TimeDelta GetCursorBlinkInterval() const override;
   ui::NativeTheme* GetNativeTheme(aura::Window* window) const override;
   void SetNativeThemeOverride(const NativeThemeGetter& callback) override;
   bool GetDefaultUsesSystemTheme() const override;
