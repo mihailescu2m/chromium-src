@@ -64,7 +64,7 @@ vars = {
   'v8_revision':
     '0407506af3d9d7e2718be1d8759296165b218fcf',
   'webrtc_git':
-    'https://webrtc.googlesource.com'
+    'https://github.com/mihailescu2m/webrtc.git'
 }
 
 allowed_hosts = [
@@ -76,7 +76,7 @@ allowed_hosts = [
   'pdfium.googlesource.com',
   'skia.googlesource.com',
   'swiftshader.googlesource.com',
-  'webrtc.googlesource.com'
+  'github.com'
 ]
 
 deps = {
@@ -556,7 +556,7 @@ deps = {
     (Var("chromium_git")) + '/external/khronosgroup/webgl.git@e4919fa03c74bd561dcabf3e61668fa3c7e54353',
   'src/third_party/webrtc': {
     'url':
-      '{webrtc_git}/src.git@88f5d9180eae78a6162cccd78850ff416eb82483'
+      '{webrtc_git}/src.git@6b2543ce209a067c9f0779122b543933622b5bb4'
   },
   'src/third_party/xdg-utils': {
     'condition':
